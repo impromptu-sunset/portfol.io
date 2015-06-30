@@ -10,7 +10,7 @@ var FormView = Backbone.View.extend({
             <form data-toggle="validator" role="form">\
               <div class="form-group"> \
                 <label for="symbol">Stock Symbol</label>\
-                <input pattern="[a-zA-Z0-9-]{1,6}" maxlength="6" type="text" id="symbol" class="form-control" data-error="Invalid Stock Ticker" required>\
+                <input pattern="[a-zA-Z0-9-]{1,6}" style="display:block;" maxlength="6" type="text" id="symbol" class="form-control" data-error="Invalid Stock Ticker" required>\
                 <div class="error-message help-block with-errors"></div>\
               </div> \
               <div class="form-group"> \
@@ -44,7 +44,9 @@ var FormView = Backbone.View.extend({
   events: {
     //Form submission form
     'submit': 'handleSubmit',
-    'keypress': 'clearErrors'
+    'keypress': 'clearErrors',
+    //add autocomplete functionality to symbol field on focus
+    'focus #symbol': 'autocomplete',
   },
 
   clearErrors: function(){
@@ -95,6 +97,37 @@ var FormView = Backbone.View.extend({
     }
     this.$('#symbol').val('');
     this.$('#amount').val('');
+  },
+
+  autocomplete: function(){
+    console.log("autocomplete called" , this.$("#symbol").css('display'));
+    this.$( "#symbol" ).autocomplete({
+          source: function( request, response ) {
+            console.log("called");
+            $.ajax({
+                type: "GET",
+                dataType: "jsonp",
+                jsonp: "callback",
+                jsonpCallback: "YAHOO.Finance.SymbolSuggest.ssCallback",
+                data: {
+                    query: request.term
+                },
+                cache: true,
+                url: "http://d.yimg.com/autoc.finance.yahoo.com/autoc"
+            }); // .ajax
+            var YAHOO = window.YAHOO = {Finance: {SymbolSuggest: {}}};
+            YAHOO.Finance.SymbolSuggest.ssCallback = function (data) {
+              var mapped = $.map(data.ResultSet.Result, function (e, i) {
+                    return {
+                        label: e.symbol + ' (' + e.name + ')',
+                        value: e.symbol
+                    };
+                });
+                response(mapped);
+            }; // YAHOO.Finance     
+          },
+          minLength: 2 // source: function
+        }); // autocomplete
   },
   
   startSpinner: function(){
