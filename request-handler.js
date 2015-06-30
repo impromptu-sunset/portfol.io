@@ -9,7 +9,7 @@ var getStocks = function(req,res) {
     //to: req.body.to,     //FORMAT: 'YYYY-MM-DD', Currently unnecessary because we always retrieve to the latest date
     period: 'd'          // 'd' (daily), 'w' (weekly), 'm' (monthly), 'v' (dividends only) 
   }, function (err, quotes) {
-    if(err) return console.log(err);
+    if(err) { return console.log(err); }
     res.json(quotes);
   });
 };
