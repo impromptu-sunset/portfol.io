@@ -23,7 +23,8 @@ module.exports = function(grunt) {
           'node_modules/**/*.js',
           '**/node_modules/**/*.js',
           'bower_components/**/*.js',
-          '**/bower_components/**/*.js'
+          '**/bower_components/**/*.js',
+          'test/testData.js'
         ]
       }
     },
@@ -89,5 +90,9 @@ module.exports = function(grunt) {
     'jshint',
     'bower-install-simple',
     'concurrent'
+  ]);
+
+  grunt.registerTask('hint', [
+    'jshint',
   ]);
 };

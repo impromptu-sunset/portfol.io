@@ -91,7 +91,7 @@ var GraphView = Backbone.View.extend({
             .attr("dy", ".15em")
             .attr("transform", function(d) {
                 //rotate x-axis labels
-                return "rotate(-45)" 
+                return "rotate(-45)";
                 });
 
     svg.append("g")
