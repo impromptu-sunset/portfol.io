@@ -7,12 +7,23 @@ var StockModel = Backbone.Model.extend({
     if (response.length !== 0) {
       this.set('history', response); // "history" is just an array of dates, stock prices, etc
       this.set('amount', parseFloat(this.get('amount')));
+      this.set('potential', this.get('amount'));
       var nShares = this.get('amount') / this.get('history')[0].adjClose;
+      var max = this.get('amount');
       _.each(this.get('history'), function(snapshot) {
         snapshot.nShares = nShares; // keeps track of number of shares for each data point
-      });
+        this.saveMax(nShares, snapshot.adjClose);
+      }.bind(this));
     } else {
       this.destroy(); // if there is no data, does not add to collection.
+    }
+  },
+
+
+  saveMax: function(shares, adjClose){
+    var currentValue = shares * adjClose;
+    if(currentValue > this.get('potential')){
+      this.set('potential', currentValue);
     }
   },
 
@@ -39,12 +50,13 @@ var StockModel = Backbone.Model.extend({
     var nShares = amount / history[0].adjClose;
 
     // updates new and existing history with number of shares
+
     _.each(history, function(snapshot) {
       snapshot.nShares = nShares;
     });
     _.each(this.get('history'), function(snapshot) {
       snapshot.nShares += nShares; // updates old data points with extra shares
-    });
+    }.bind(this));
 
     // first index of the stock history where there's overlap
     var existingIndex = _.findIndex(history, function(snapshot) {
@@ -55,6 +67,10 @@ var StockModel = Backbone.Model.extend({
     var earlyHistory = history.slice(0, existingIndex);
     var updatedHistory = earlyHistory.concat(this.get('history'));
     this.set('history', updatedHistory);
+
+     _.each(this.get('history'), function(snapshot) {
+      this.saveMax(snapshot.nShares, snapshot.adjClose);
+    }.bind(this));
 
     this.set('amount', this.get('amount') + amount); // total amount invested in this stock
     this.trigger('edited', this); // alerts views to rerender
@@ -74,7 +90,8 @@ var StockModel = Backbone.Model.extend({
       if (startDate <= date) {
         snapshot.nShares = snapshot.nShares + nShares;
       }
-    });
+      this.saveMax(snapshot.nShares, snapshot.adjClose);
+    }.bind(this));
     this.trigger('edited', this);
   },
 

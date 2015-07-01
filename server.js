@@ -109,12 +109,15 @@ app.post('/portfolios', function(req, res) {
 });
 
 app.post('/stock', function(req, res) {
+  console.log(req.header);
+  console.log("NO HERE");
   new Stock(req.body).save().then(function(newStock) {
     res.send(newStock);
   });
 });
 
 app.post('/stocks', function(req, res) {
+  console.log("HEREEE");
   var id = req.body.id;
   new Stock().query('where','portfolios_id', '=', id).fetchAll().then(function(stocks) {
     res.send(stocks);
