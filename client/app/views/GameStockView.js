@@ -66,15 +66,7 @@ var GameStockView = Backbone.View.extend({
        d3.max(lineData, function(stock) { return d3.max(stock, function(d) { return d.value; }); })
      ]);
 
-    /*
-    create line expression: x-values=dates of each stock (day), 
-    y-values=$ value on that day (adjusted close from yahoo-finance API call)
-    */
-    // var lineFunction = d3.svg.line()
-    //     .x(function(d) { return x(d.date); })
-    //     .y(function(d) { return y(d.value); });
-
-    // what's going on here?
+    // line generation function
     var line = d3.svg.line()
         .x(function(d, i) { return x(i); })
         .y(function(d, i) { return y(d.value); });
@@ -122,19 +114,14 @@ var GameStockView = Backbone.View.extend({
           .duration(clockSpeed)
           .ease("linear")
           .attr("transform", "translate(" + x(-1) + ",0)")
-          // .each("end", tick)
-        .each('end', function(){
-          // pop the old data point off the front
-          data.shift();
-          tick();
-        });
-
+          .each('end', function(){
+            // pop the old data point off the front
+            data.shift();
+            tick();
+          });
     };
 
     tick();
-
-    // d3.timer(tick, clockSpeed);
-    // setInterval(tick, clockSpeed);
 
   },
 
@@ -144,7 +131,6 @@ var GameStockView = Backbone.View.extend({
     if (this.collection.length > 0) {  
       this.$el.show();
       this.drawStockLine(this.collection, this);
-      // this.plotLine(this.collection, this);
       return this.$el;
     }
   }
