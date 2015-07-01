@@ -6,6 +6,5 @@ var WalletModel = Backbone.Model.extend({
   },
 
   initialize: function() {
-    console.log('hello I am the wallet model!');
   }
 });
