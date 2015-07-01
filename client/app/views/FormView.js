@@ -10,17 +10,17 @@ var FormView = Backbone.View.extend({
             <form data-toggle="validator" role="form">\
               <div class="form-group"> \
                 <label for="symbol">Stock Symbol</label>\
-                <input pattern="[a-zA-Z0-9-]{1,6}" style="display:block;" maxlength="6" type="text" id="symbol" class="form-control" data-error="Invalid Stock Ticker" required>\
+                <input pattern="[a-zA-Z0-9-]{1,6}" style="display:block;" maxlength="6" type="text" id="symbol" class="form-control" data-error="Invalid Stock Ticker" value="AAPL" required autofocus>\
                 <div class="error-message help-block with-errors"></div>\
               </div> \
               <div class="form-group"> \
                 <label for="date">Date</label>\
-                <input pattern="^(?!.*00/).*$" type="date" id="date" class="form-control" data-error="Invalid Date" required>\
+                <input pattern="^(?!.*00/).*$" type="date" id="date" class="form-control" data-error="Invalid Date" value="2005-08-10"required>\
                 <div class="help-block with-errors">After 1972</div>\
               </div> \
               <div class="form-group"> \
                  <label for="amount">Amount ($)</label>\
-                 <input type="number" id="amount" class="form-control" data-error="Invalid amount" required>\
+                 <input type="number" id="amount" class="form-control" data-error="Invalid amount" value="1000"required>\
                  <div class="help-block with-errors"></div>\
               </div> \
               <button type="submit" class="btn btn-xs submit-button">Submit</button>\
