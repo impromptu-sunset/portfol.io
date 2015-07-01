@@ -2,7 +2,7 @@
 var WalletModel = Backbone.Model.extend({
 
   defaults: {
-    'cash': 0
+    'cash': 10000
   },
 
   initialize: function() {

@@ -7,7 +7,7 @@ var WalletView = Backbone.View.extend({
 
   template: _.template('<button id="buy-button" class="btn btn-default">Buy</button> \
                         <button id="sell-button" class="btn btn-default">Sell</button> \
-                        <h3><%= cash %></h3> '),
+                        <h3>$<%= numeral(cash).format("0,0.00") %></h3> '),
 
   initialize: function() {
     this.model.on('change', this.render, this);
@@ -40,7 +40,7 @@ var WalletView = Backbone.View.extend({
 
   handleSell: function(event) {
     event.preventDefault();
-    
+
     // console.log('you tried to sell!');
 
     var currentCash = this.model.get('cash');
