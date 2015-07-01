@@ -8,6 +8,7 @@ var StockView = Backbone.View.extend({
          <div class="stock-summary">\
            <div class="info-stat"> <strong>Initial Value</strong>: $<%= this.numberWithCommas(amount.toFixed(0)) %></div>\
            <div class="info-stat"> <strong>Final Value</strong>: $<%= this.numberWithCommas(final.toFixed(2)) %></div>\
+           <div class="info-stat"> <strong>Potential Value</strong>: $<%= this.numberWithCommas(potential.toFixed(2)) %></div>\
          </div>\
        </div>\
        <div class="trend-stats col-xs-2">\
