@@ -22,7 +22,7 @@ var DashboardView = Backbone.View.extend({
 
     return this.$el.html([
       this.gameStockView.$el,
-      this.graphView.$el,
+      // this.graphView.$el,
       this.infoView.$el,
       // add the wallet box div to the DOM on page load
       //
