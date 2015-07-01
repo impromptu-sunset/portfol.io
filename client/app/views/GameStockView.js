@@ -16,13 +16,14 @@ var GameStockView = Backbone.View.extend({
   drawStockLine: function(stocks) {
 
     // time to each new data point, in ms
-    var clockSpeed = 500;
+    var clockSpeed = 300;
 
     // number of samples in the data array
     var sampleSize = 365;
 
     // creates an array of data (of length sampleSize) for each stock in the collection
     var lineData = stocks.map(function(stock) {
+
       var rawData = stock.getTrajectory();
       if (rawData.length <= sampleSize) {
         return rawData;
@@ -121,15 +122,18 @@ var GameStockView = Backbone.View.extend({
           .duration(clockSpeed)
           .ease("linear")
           .attr("transform", "translate(" + x(-1) + ",0)")
-          .each("end", tick);
-
-      // pop the old data point off the front
-      data.shift();
-
+          // .each("end", tick)
+        .each('end', function(){
+          // pop the old data point off the front
+          data.shift();
+          tick();
+        });
 
     };
 
-    d3.timer(tick, clockSpeed);
+    tick();
+
+    // d3.timer(tick, clockSpeed);
     // setInterval(tick, clockSpeed);
 
   },
