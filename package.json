@@ -32,6 +32,7 @@
     "morgan": "^1.6.0",
     "mysql": "^2.7.0",
     "node": "0.0.0",
+    "node-zillow": "0.0.3",
     "passport": "^0.2.2",
     "passport-local": "^1.0.0",
     "yahoo-finance": "^0.2.11"

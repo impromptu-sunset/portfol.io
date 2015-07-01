@@ -2,6 +2,7 @@ var express = require('express');
 var morgan = require('morgan');
 var bodyParser = require('body-parser');
 var handler = require('./request-handler.js');
+var zillow = require('./zillow.js');
 var session = require('express-session');
 var bcrypt = require('bcrypt-nodejs');
 var passport = require('passport');
@@ -108,6 +109,7 @@ app.post('/portfolios', function(req, res) {
   });
 });
 
+// is this ever called?
 app.post('/stock', function(req, res) {
   console.log(req.header);
   console.log("NO HERE");
@@ -123,6 +125,8 @@ app.post('/stocks', function(req, res) {
     res.send(stocks);
   });
 });
+
+app.use('/api/zillow', zillow.getSearchResults);
 
 app.use('/api/stocks', handler.getStocks);
 
