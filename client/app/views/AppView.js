@@ -50,7 +50,7 @@ var AppView = Backbone.View.extend({
     view.delegateEvents();
     this.formView.delegateEvents();
     this.dashboardView.delegateEvents();
-    this.dashboardView.infoView.delegateEvents();
+    // this.dashboardView.infoView.delegateEvents();
     var navbar = $(this.navDiv);
     if (this.model.get('signedin')) {
       navbar = this.template(this.model.attributes);
