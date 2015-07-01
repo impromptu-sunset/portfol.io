@@ -19,6 +19,9 @@ var StockModel = Backbone.Model.extend({
     }
   },
 
+  getData: function() {
+    return this.get('gameData');
+  },
 
   saveMax: function(shares, adjClose){
     var currentValue = shares * adjClose;
