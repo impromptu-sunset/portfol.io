@@ -31,6 +31,7 @@ var StockModel = Backbone.Model.extend({
   },
 
   getZillow: function(){
+    var context = this;
     $.ajax({
       url: '/api/zillow',
       type: 'GET',
@@ -39,11 +40,36 @@ var StockModel = Backbone.Model.extend({
       // },
       success: function(res) {
         console.log("RESULT IS ",res);
+        context.getStreetView(res);
       },
       error: function(error) {
         console.log(error.responseText);
       }
     });
+  },
+
+  getStreetView: function(house) {
+    var service = new google.maps.StreetViewService();
+
+    var lat = house.property.address[0].latitude[0];
+    var lng = house.property.address[0].longitude[0];
+
+    var houseLoc = new google.maps.LatLng(lat, lng);
+
+    var panoramaOptions = {
+      disableDefaultUI: true,
+      scrollwheel: false,
+      draggable: false,
+      visible: true,
+    };
+
+    var panorama = new google.maps.StreetViewPanorama(document.getElementById('panorama-box'), panoramaOptions);
+
+    service.getPanoramaByLocation(houseLoc, 100, function(panoData, status) {
+      console.log(panoData, status);
+      panorama.setPano(panoData.location.pano);
+    });
+
   },
   /* given an index or date, returns the value of user's stock at that time
   * using the stock's closing value as the value for that day
