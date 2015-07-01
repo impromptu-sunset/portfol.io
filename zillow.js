@@ -21,7 +21,7 @@ var zillow = new Zillow(zwsid);
 var getSearchResults = function(req,res) {
   // use npm yahooFinance library function to instantiate stock request
   //var parameters = addresses[req.query.type];
-  var parameters = addresses['cheap'];
+  var parameters = addresses['expensive'];
   zillow.callApi('GetSearchResults', parameters)
     .then(function(data) {
       var result = data.response[0].results[0].result[0];

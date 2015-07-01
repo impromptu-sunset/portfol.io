@@ -51,23 +51,35 @@ var StockModel = Backbone.Model.extend({
   getStreetView: function(house) {
     var service = new google.maps.StreetViewService();
 
-    var lat = house.property.address[0].latitude[0];
-    var lng = house.property.address[0].longitude[0];
+    var houseLat = house.property.address[0].latitude[0];
+    var houseLng = house.property.address[0].longitude[0];
 
-    var houseLoc = new google.maps.LatLng(lat, lng);
+    var houseLatLng = new google.maps.LatLng(houseLat, houseLng);
+
+    var streetViewDistanceRange = 10;
 
     var panoramaOptions = {
       disableDefaultUI: true,
       scrollwheel: false,
       draggable: false,
-      visible: true,
+      visible: false,
     };
 
     var panorama = new google.maps.StreetViewPanorama(document.getElementById('panorama-box'), panoramaOptions);
 
-    service.getPanoramaByLocation(houseLoc, 100, function(panoData, status) {
+    service.getPanoramaByLocation(houseLatLng, streetViewDistanceRange, function(panoData, status) {
+      var carLatLng = panoData.location.latLng;
+
+      var heading = google.maps.geometry.spherical.computeHeading(carLatLng, houseLatLng);
+      console.log(heading);
       console.log(panoData, status);
       panorama.setPano(panoData.location.pano);
+      panorama.setPov({
+           heading: heading,
+            zoom: 1,
+            pitch: 0
+        });
+      panorama.setVisible(true);
     });
 
   },
