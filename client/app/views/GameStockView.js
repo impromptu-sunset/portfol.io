@@ -3,43 +3,44 @@ find more information on mbostock's page for charting line charts: http://bl.ock
 
 var GameStockView = Backbone.View.extend({
 
-  className: 'graph col-xs-12 col-md-12',
+  className: 'graph col-xs-4 col-md-4',
 
   initialize: function() {
-    this.collection.on('sync edited remove reset', this.render, this);
+    this.model.on('sync edited remove reset', this.render, this);
     var context = this;
     $(window).on("resize", function() {
       context.render.apply(context);
     });
+    //this.render();
   },
 
-  drawStockLine: function(stocks) {
-
-    // time to each new data point, in ms
-    var clockSpeed = 300;
+  // creates an array of data (of length sampleSize)
+  getStockData: function() {
 
     // number of samples in the data array
     var sampleSize = 365;
 
-    // creates an array of data (of length sampleSize) for each stock in the collection
-    var lineData = stocks.map(function(stock) {
-
-      var rawData = stock.getTrajectory();
-      if (rawData.length <= sampleSize) {
-        return rawData;
-      } else {
-        var result = [], increment = rawData.length / sampleSize;
-        for (var i = 0; i < rawData.length; i += increment) {
-          var index = Math.floor(i);
-          result.push(rawData[index]);
-          // if (results.length === sampleSize) return results;
-        }
-        return result;
+    var rawData = this.model.getTrajectory();
+    if (rawData.length <= sampleSize) {
+      return rawData;
+    } else {
+      var result = [], increment = rawData.length / sampleSize;
+      for (var i = 0; i < rawData.length; i += increment) {
+        var index = Math.floor(i);
+        result.push(rawData[index]);
+        // if (results.length === sampleSize) return results;
       }
-    });
+      return result;
+    }
+  },
+  drawStockLine: function() {
+
+    // time to each new data point, in ms
+    var clockSpeed = 300;
 
     // array of data for one stock in the collection
-    var stockData = lineData[lineData.length - 1];
+    var stockData = this.getStockData();
+    console.log("stock data is: ", stockData);
 
     // number of data points to show at a time
     var n = 20;
@@ -62,8 +63,8 @@ var GameStockView = Backbone.View.extend({
 
     //set y-domain to min and max stock $ ranges
     y.domain([
-       d3.min(lineData, function(stock) { return d3.min(stock, function(d) { return d.value; }); }),
-       d3.max(lineData, function(stock) { return d3.max(stock, function(d) { return d.value; }); })
+       d3.min(stockData, function(d) { return d.value; }),
+       d3.max(stockData, function(d) { return d.value; })
      ]);
 
     // line generation function
@@ -101,6 +102,7 @@ var GameStockView = Backbone.View.extend({
         .attr("class", "line")
         .attr("d", line);
 
+
     var tick = function() {
 
       // push a new data point onto the back
@@ -126,13 +128,9 @@ var GameStockView = Backbone.View.extend({
   },
 
   render: function() {
-    this.$el.hide();
-    this.$el.empty();
-    if (this.collection.length > 0) {  
-      this.$el.show();
-      this.drawStockLine(this.collection, this);
-      return this.$el;
-    }
+    this.$el.empty(); 
+    this.drawStockLine();
+    return this.$el;
   }
 
 });

@@ -1,7 +1,7 @@
 /* Backbone view for the graph view
 find more information on mbostock's page for charting line charts: http://bl.ocks.org/mbostock/3883245 */
 
-var GameStockView = Backbone.View.extend({
+var GameStocksView = Backbone.View.extend({
 
   className: 'graph col-xs-12 col-md-12',
 
@@ -13,42 +13,47 @@ var GameStockView = Backbone.View.extend({
     });
   },
 
-  drawStocks: function() {
+  // drawStocks: function() {
 
-    this.collection.forEach(function(model){
+  //   this.collection.forEach(function(model){
+      
+  //   });
 
-    });
+  //   var tick = function() {
 
-    var tick = function() {
+  //     // push a new data point onto the back
+  //     data.push(stockData.shift());
 
-      // push a new data point onto the back
-      data.push(stockData.shift());
+  //     // redraw the line, and slide it to the left
+  //     d3.selectAll('.line')
+  //         .attr("d", line)
+  //         .attr("transform", null)
+  //       .transition()
+  //         .duration(clockSpeed)
+  //         .ease("linear")
+  //         .attr("transform", "translate(" + x(-1) + ",0)")
+  //         .each('end', function(){
+  //           // pop the old data point off the front
+  //           data.shift();
+  //           tick();
+  //         });
+  //   };
 
-      // redraw the line, and slide it to the left
-      d3.selectAll('.line')
-          .attr("d", line)
-          .attr("transform", null)
-        .transition()
-          .duration(clockSpeed)
-          .ease("linear")
-          .attr("transform", "translate(" + x(-1) + ",0)")
-          .each('end', function(){
-            // pop the old data point off the front
-            data.shift();
-            tick();
-          });
-    };
+  //   tick();
 
-    tick();
-
-  },
+  // },
 
   render: function() {
     this.$el.hide();
     this.$el.empty();
     if (this.collection.length > 0) {  
       this.$el.show();
-      this.drawStocks(this);
+      this.collection.forEach(function(model){
+        console.log("model is: ", model);
+        var gameStockView = new GameStockView({model: model});
+        this.$el.append(gameStockView.render());
+      }, this);
+      // this.drawStocks(this);
       return this.$el;
     }
   }
