@@ -13,6 +13,7 @@ var WalletView = Backbone.View.extend({
     this.model.on('change', this.render, this);
     this.render();
     // DEBUG VALUES BEFORE HOOKING UP WITH REAL STOCKS
+    this.originalShares = 200;
     this.nShares = 200;
     this.adjClose = 5;
     this.magnitudeBuySell = .2;
@@ -24,7 +25,6 @@ var WalletView = Backbone.View.extend({
   },
 
   render: function (){
-    console.log('trying to render wallet view');
     this.$el.html(this.template(this.model.attributes));
 
   },
@@ -37,7 +37,7 @@ var WalletView = Backbone.View.extend({
     var currentCash = this.model.get('cash');
 
     // debugger;
-    var numSharesToBuy = nShares * this.magnitudeBuySell;
+    var numSharesToBuy = Math.round(this.originalShares * this.magnitudeBuySell);
     var cost = numSharesToBuy * adjClose;
     console.log('num shares to buy', numSharesToBuy);
     // console.log('you tried to buy!');
@@ -53,14 +53,28 @@ var WalletView = Backbone.View.extend({
   },
 
   handleSell: function(event) {
-    event.preventDefault();
+      event.preventDefault();
 
-    // console.log('you tried to sell!');
-
+    var nShares = this.nShares;
+    var adjClose = this.adjClose;
     var currentCash = this.model.get('cash');
 
-    this.model.set('cash', currentCash+5);
-    console.log(this.model.get('cash'));
+    // debugger;
+    var numSharesToSell = Math.round(this.originalShares * this.magnitudeBuySell);
+
+    var cost = numSharesToSell * adjClose;
+
+    if (nShares - numSharesToSell < 0){
+      console.error("ERROR: trying to sell more shares than you own");
+      return;
+    }
+    console.log('num shares to sell', numSharesToSell);
+    // console.log('you tried to buy!');
+
+  
+    this.model.set('cash', currentCash+cost);
+    this.nShares = this.nShares - numSharesToSell;
+    console.log('new number of shares', this.nShares);
 
   }
 
