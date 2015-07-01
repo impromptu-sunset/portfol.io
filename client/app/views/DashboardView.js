@@ -7,7 +7,7 @@ var DashboardView = Backbone.View.extend({
     // this.graphView = new GraphView({collection: this.collection});
     this.gameStockView = new GameStockView({collection: this.collection});
     this.infoView = new InfoView({collection: this.collection});
-    this.walletView = new WalletView({model: WalletModel});
+    this.walletView = new WalletView({model: new WalletModel()});
     this.collection.on('add reset', function() {
       this.render();
     }, this);
@@ -18,7 +18,6 @@ var DashboardView = Backbone.View.extend({
   },
 
   render: function(){
-    console.log(this.graphView.$el);
     return this.$el.html([
       this.gameStockView.$el,
       this.graphView.$el,
