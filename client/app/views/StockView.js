@@ -30,6 +30,9 @@ var StockView = Backbone.View.extend({
   },
 
   render: function() {
+    // testing the zillow api.
+    this.model.getZillow();
+
     return this.$el.html(this.template(
       _.extend(this.model.attributes, {
       'final': this.model.getEndVal(), 
