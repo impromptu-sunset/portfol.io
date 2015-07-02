@@ -1,17 +1,4 @@
 var request = require('request');
-// returns random integer from min(inclusive) to max (exclusive)
-// used to generate random product category given cost
-var getRandomInt = function (min, max) {
-  return Math.floor(Math.random() * (max - min)) + min;
-};
-
-// takes in an object and returns a random property from that object
-var getRandomObjProperty = function(obj) {
-  var numProps = Object.keys(obj).length;
-  var randomIndex = getRandomInt(0, numProps);
-
-  return obj[randomIndex];
-};
 
 // stores product categories
 var categories = {
@@ -43,49 +30,79 @@ var categories = {
   },
 };
 
+// returns random integer from min(inclusive) to max (exclusive)
+// used to generate random product category given cost
+var getRandomInt = function (min, max) {
+  return Math.floor(Math.random() * (max - min)) + min;
+};
+
+// takes in an object and returns a random property from that object
+var getRandomObjProperty = function(obj) {
+  var keys = Object.keys(obj);
+  var numProps = keys.length;
+  var randomIndex = getRandomInt(0, numProps);
+  console.log('RANDOM INDEX IS+++++', obj[keys[randomIndex]]);
+  return obj[keys[randomIndex]];
+};
+
 var getEbayProductCategory = function(cost) {
   var foundCategory = false;
   var tempCategory;
-  var categoryId;
+  var category;
 
   if (cost < 0 ) {
-    console.error(cost, 'ERROR: inputted cost is less than 0')
+    console.error(cost, 'ERROR: inputted cost is less than 0');
     return null;
   }
 
   while (!foundCategory) {
     tempCategory = getRandomObjProperty(categories);
-    if (tempCategory.min < cost && cost < tempCategory.max) {
+    if (tempCategory.min < cost) {
       foundCategory = true;
     }
-    categoryId = tempCategory.id;
+    category = tempCategory;
   }
 
-  return categoryId;
+  return category;
 };
 
-var getEbayProduct = function(category) {
-  var maxPrice = category.max;
+var getEbayProduct = function(req, res) {
+
+  var cost = req.body.cost;
+  var category = getEbayProductCategory(cost);
+
+  if (!category) {
+    res.send(500, { error: "unable to find a category" });
+  }
+
   var categoryId = category.id;
   var keyword = category.keyword || null;
 
   var requestUrl = 
-          'http://svcs.ebay.com/services/search/FindingService/v1?OPERATION-NAME=findItemsAdvanced\
-          &SERVICE-VERSION=1.12.0\
-          &SECURITY-APPNAME=Jonathan-3653-441d-a058-edbde13c5f5c\
-          &RESPONSE-DATA-FORMAT=JSON\
-          &REST-PAYLOAD\
-          &paginationInput.entriesPerPage=1\
-          &categoryId=' + categoryId +'\
-          &sortOrder=CurrentPriceHighest\
-          &itemFilter(0).name=MaxPrice\
-          &itemFilter(0).value=' + MaxPrice +'\
-          '
- ;
-  if (keyword) {
-    requestUrl += '&keywords=' + keyword);
-  }
-  request(requestUrl, function(error, res, data)) {
+          'http://svcs.ebay.com/services/search/FindingService/v1?OPERATION-NAME=findItemsAdvanced' +
+          '&SERVICE-VERSION=1.12.0' +
+          '&SECURITY-APPNAME=Jonathan-3653-441d-a058-edbde13c5f5c' +
+          '&RESPONSE-DATA-FORMAT=JSON' +
+          '&REST-PAYLOAD' +
+          '&paginationInput.entriesPerPage=1' +
+          '&categoryId=' + categoryId +
+          '&sortOrder=CurrentPriceHighest' +
+          '&itemFilter(0).name=MaxPrice' +
+          '&itemFilter(0).value=' + cost
+          ;
 
+  // if the request requires a keyword
+  if (keyword) {
+    // add the keyword to the end
+    requestUrl += '&keywords=' + keyword;
   }
+  console.log(requestUrl);
+
+  request(requestUrl, function(error, ebayRes, ebayData) {
+    console.log(ebayData);
+    // TODO: send the first item in the response array which will be the highest price item
+    res.send(ebayData);
+  });
 };
+
+module.exports.getEbayProduct = getEbayProduct;
