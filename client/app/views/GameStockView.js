@@ -36,7 +36,7 @@ var GameStockView = Backbone.View.extend({
   drawStockLine: function() {
 
     // time to each new data point, in ms
-    var clockSpeed = 300;
+    var clockSpeed = 2000;
 
     // array of data for one stock in the collection
     var stockData = this.getStockData();
@@ -46,11 +46,11 @@ var GameStockView = Backbone.View.extend({
     var n = 20;
     
     // first n points of data
-    var data = stockData.splice(0, 20);
+    var data = stockData.splice(0, n);
 
     var margin = {top: 20, right: 20, bottom: 20, left: 40},
-        width = 960 - margin.left - margin.right,
-        height = 500 - margin.top - margin.bottom;
+        width = this.$el.width() - margin.left - margin.right,
+        height = 300 - margin.top - margin.bottom;
 
     var x = d3.scale.linear()
         .domain([0, n - 1])
@@ -61,6 +61,8 @@ var GameStockView = Backbone.View.extend({
         .range([height, 0]);
         // .nice();
 
+    var yAxis = d3.svg.axis().scale(y).orient("left");
+
     //set y-domain to min and max stock $ ranges
     y.domain([
        d3.min(stockData, function(d) { return d.value; }),
@@ -69,11 +71,13 @@ var GameStockView = Backbone.View.extend({
 
     // line generation function
     var line = d3.svg.line()
+        //.interpolate("monotone")
         .x(function(d, i) { return x(i); })
-        .y(function(d, i) { return y(d.value); });
+        .y(function(d, i) { return y(d.value); })
+        //.interpolate("basis");
 
     // append svg and axes to graph container
-    var svg = d3.select('.graph').append("svg")
+    var svg = d3.select(this.el).append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
       .append("g")
@@ -84,6 +88,7 @@ var GameStockView = Backbone.View.extend({
       .append("rect")
         .attr("width", width)
         .attr("height", height);
+        //.attr('transform','translate(0,' + height / 2 + ')');
 
     svg.append("g")
         .attr("class", "x axis")
@@ -92,10 +97,11 @@ var GameStockView = Backbone.View.extend({
 
     svg.append("g")
         .attr("class", "y axis")
-        .call(d3.svg.axis().scale(y).orient("left"));
+        .call(yAxis);
 
 
     var path = svg.append("g")
+        .attr('class', 'path')
         .attr("clip-path", "url(#clip)")
       .append("path")
         .datum(data)
@@ -108,14 +114,46 @@ var GameStockView = Backbone.View.extend({
       // push a new data point onto the back
       data.push(stockData.shift());
 
+      
+      var middle = data[data.length - 1].value;
+      y.domain([middle - 500, middle + 500]);
+      //  y.domain([
+      //   d3.min(data, function(d) { return d.value; }),
+      //   d3.max(data, function(d) { return d.value; })
+      // ]);
+      yAxis = d3.svg.axis().scale(y).orient("left");
       // redraw the line, and slide it to the left
+
+      // var middle = data[data.length - 2].value - data[data.length - 1].value;
+      // d3.select('.y.axis')        
+      //   .transition()
+      //     .duration(clockSpeed)
+      //     .ease("linear")
+      //     .attr('transform', 'translate(0, ' + y(middle) + ')');
+      // svg.select('.line')
+        // .attr("d", line)
+        // .attr("transform", null);
+
+      var t = svg
+        .transition()
+        .duration(clockSpeed);
+
+       t.select(".y.axis")
+         .call(yAxis);
+
       path
+          //.transition()
+          //.duration(clockSpeed)
           .attr("d", line)
           .attr("transform", null)
-        .transition()
+          .transition()
           .duration(clockSpeed)
+          //.duration(clockSpeed)
           .ease("linear")
+          //.transition()
+          //.duration(clockSpeed)
           .attr("transform", "translate(" + x(-1) + ",0)")
+          //.attr("transform", "translate(0,0)")
           .each('end', function(){
             // pop the old data point off the front
             data.shift();
@@ -129,7 +167,7 @@ var GameStockView = Backbone.View.extend({
 
   render: function() {
     this.$el.empty(); 
-    this.drawStockLine();
+    //this.drawStockLine();
     return this.$el;
   }
 
