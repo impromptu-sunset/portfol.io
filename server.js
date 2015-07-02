@@ -127,8 +127,6 @@ app.post('/stocks', function(req, res) {
   });
 });
 
-app.use('/api/zillow', zillow.getSearchResults);
-
 app.use('/api/stocks', handler.getStocks);
 
 app.use('/api/ebay', ebay.getEbayProduct);

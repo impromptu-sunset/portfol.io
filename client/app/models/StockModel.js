@@ -30,64 +30,7 @@ var StockModel = Backbone.Model.extend({
     }
   },
 
-  getZillow: function(){
-    var context = this;
-    $.ajax({
-      url: '/api/zillow',
-      type: 'GET',
-      // data: { 
-      //   name: this.get('name'),
-      // },
-      success: function(res) {
-        console.log("RESULT IS ",res);
-        context.getStreetView(res);
-      },
-      error: function(error) {
-        console.log(error.responseText);
-      }
-    });
-  },
 
-  getStreetView: function(house) {
-    var service = new google.maps.StreetViewService();
-
-    var houseLat = house.property.address[0].latitude[0];
-    var houseLng = house.property.address[0].longitude[0];
-
-    var houseLatLng = new google.maps.LatLng(houseLat, houseLng);
-
-    var streetViewDistanceRange = 50;
-
-    var panoramaOptions = {
-      disableDefaultUI: true,
-      scrollwheel: false,
-      draggable: false,
-      visible: false,
-    };
-
-    var panorama = new google.maps.StreetViewPanorama(document.getElementById('panorama-box'), panoramaOptions);
-
-    service.getPanoramaByLocation(houseLatLng, streetViewDistanceRange, function(panoData, status) {
-      if(status === google.maps.StreetViewStatus.OK){
-        var carLatLng = panoData.location.latLng;
-
-        var heading = google.maps.geometry.spherical.computeHeading(carLatLng, houseLatLng);
-        console.log(heading);
-        console.log(panoData, status);
-        panorama.setPano(panoData.location.pano);
-        panorama.setPov({
-             heading: heading,
-              zoom: 1,
-              pitch: 0
-          });
-        panorama.setVisible(true);
-      }
-      else {
-        console.error('ERROR: panorama does not exist at that location');
-      }
-    });
-
-  },
   /* given an index or date, returns the value of user's stock at that time
   * using the stock's closing value as the value for that day
   */
