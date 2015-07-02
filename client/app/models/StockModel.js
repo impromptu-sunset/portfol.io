@@ -30,21 +30,7 @@ var StockModel = Backbone.Model.extend({
     }
   },
 
-  getZillow: function(){
-    $.ajax({
-      url: '/api/zillow',
-      type: 'GET',
-      // data: { 
-      //   name: this.get('name'),
-      // },
-      success: function(res) {
-        console.log("RESULT IS ",res);
-      },
-      error: function(error) {
-        console.log(error.responseText);
-      }
-    });
-  },
+
   /* given an index or date, returns the value of user's stock at that time
   * using the stock's closing value as the value for that day
   */
