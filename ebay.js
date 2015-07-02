@@ -2,6 +2,7 @@ var request = require('request');
 
 // stores product categories
 // find new product category IDs at: http://www.isoldwhat.com/getcats/
+// TODO: add tractors, MIR machines (medical equipment)
 var categories = {
   house: {
     min: 15000,
@@ -48,6 +49,7 @@ var categories = {
 
 // returns random integer from min(inclusive) to max (exclusive)
 // used to generate random product category given cost
+// used for generating a random index in an array
 var getRandomInt = function (min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 };
@@ -60,12 +62,12 @@ var getRandomObjProperty = function(obj) {
   return obj[keys[randomIndex]];
 };
 
+// returns a random product category from the categories object
+// based on the passed in cost
 var getEbayProductCategory = function(cost) {
   var foundCategory = false;
   var tempCategory;
   var category;
-
-  console.log('COST IS ', cost);
 
   if (cost < 0 ) {
     console.error(cost, 'ERROR: inputted cost is less than 0');
@@ -88,21 +90,26 @@ var getEbayProductCategory = function(cost) {
   return category;
 };
 
+// takes in cost and returns the top 3
+// most expensive items that can be afforded with the passed in cost
 var getEbayProduct = function(req, res) {
 
   var cost = req.body.cost;
   var category;
 
-
+  // if something other than a number is passed in
   if (typeof cost !== 'number') {
+    // return an error
     res.send(500, { error: "must send a number to find ebay product" });
   }
   
-
+  // get a category to submit an ebay API call to
   category = getEbayProductCategory(cost);
 
   // DEBUG TO TEST SPECIFIC CATEGORIES:
   // category = categories.homeAndGarden;
+
+  // 
   if (!category) {
     res.send(500, { error: "unable to find a category" });
   }
@@ -116,10 +123,10 @@ var getEbayProduct = function(req, res) {
           '&SECURITY-APPNAME=Jonathan-3653-441d-a058-edbde13c5f5c' +
           '&RESPONSE-DATA-FORMAT=JSON' +
           '&REST-PAYLOAD' +
-          '&paginationInput.entriesPerPage=3' +
+          '&paginationInput.entriesPerPage=3' + // changes the number of results that the API returns
           '&categoryId=' + categoryId +
           '&sortOrder=CurrentPriceHighest' +
-          '&itemFilter(0).name=MaxPrice' +
+          '&itemFilter(0).name=MaxPrice' + // return the most expensive items that we can afford
           '&itemFilter(0).value=' + cost
           ;
 
@@ -130,8 +137,20 @@ var getEbayProduct = function(req, res) {
   }
 
   request(requestUrl, function(error, ebayRes, ebayData) {
-    // TODO: send the first item in the response array which will be the highest price item
-    res.send(ebayData);
+    var results;
+    var result;
+    var randomIndex;
+
+    // stringify the ebay result JSON
+    results = JSON.parse(ebayData)
+    // store the top x items that can be purchased 
+    results = results.findItemsAdvancedResponse[0].searchResult[0].item;
+    // generate a random index for the 
+    randomIndex = getRandomInt(0, results.length);
+    // store the random result
+    result = results[randomIndex];
+    // send a JSON version of the random result
+    res.json(result);
   });
 };
 
