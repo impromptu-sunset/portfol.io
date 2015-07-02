@@ -36,14 +36,14 @@ var GameStockView = Backbone.View.extend({
   drawStockLine: function() {
 
     // time to each new data point, in ms
-    var clockSpeed = 2000;
+    var clockSpeed = 300;
 
     // array of data for one stock in the collection
     var stockData = this.getStockData();
     console.log("stock data is: ", stockData);
 
     // number of data points to show at a time
-    var n = 20;
+    var n = 10;
     
     // first n points of data
     var data = stockData.splice(0, n);
@@ -65,8 +65,8 @@ var GameStockView = Backbone.View.extend({
 
     //set y-domain to min and max stock $ ranges
     y.domain([
-       d3.min(stockData, function(d) { return d.value; }),
-       d3.max(stockData, function(d) { return d.value; })
+       d3.min(data, function(d) { return d.value; }),
+       d3.max(data, function(d) { return d.value; })
      ]);
 
     // line generation function
@@ -108,20 +108,60 @@ var GameStockView = Backbone.View.extend({
         .attr("class", "line")
         .attr("d", line);
 
-
+    var updateY = function(data){
+         //update domain
+         data.push(stockData.shift());
+          var middle = data[data.length - 1].value;
+          
+          
+          path
+          .attr("d",line)
+          .attr("transform", null);
+          
+          y.domain([middle - 500, middle + 500]);
+          // y.domain([
+          //   d3.min(data, function(d) { return d.value; }),
+          //   d3.max(data, function(d) { return d.value; })
+          // ]); 
+          //change scale
+          //yScale.domain(yDomain); 
+          yAxis = d3.svg.axis().scale(y).orient("left");
+          //switch to new scale
+          svg.select(".y.axis")
+          .transition()
+          .duration(clockSpeed)
+          .ease("linear")
+          .call(yAxis);
+            
+            // update the line
+          path
+          .transition()
+          .duration(clockSpeed)
+          .ease("linear")
+          .attr("d", line)
+          .attr("transform", "translate(" + x(-1) + ",0)")
+          .each('end', function(){
+            // pop the old data point off the front
+            
+            data.shift();
+            updateY(data);
+            //updateY(data);
+          });   
+           
+    }
     var tick = function() {
 
       // push a new data point onto the back
       data.push(stockData.shift());
 
       
-      var middle = data[data.length - 1].value;
-      y.domain([middle - 500, middle + 500]);
+      //var middle = data[data.length - 1].value;
+      //y.domain([middle - 500, middle + 500]);
       //  y.domain([
       //   d3.min(data, function(d) { return d.value; }),
       //   d3.max(data, function(d) { return d.value; })
       // ]);
-      yAxis = d3.svg.axis().scale(y).orient("left");
+      //yAxis = d3.svg.axis().scale(y).orient("left");
       // redraw the line, and slide it to the left
 
       // var middle = data[data.length - 2].value - data[data.length - 1].value;
@@ -134,12 +174,12 @@ var GameStockView = Backbone.View.extend({
         // .attr("d", line)
         // .attr("transform", null);
 
-      var t = svg
-        .transition()
-        .duration(clockSpeed);
+      // var t = svg
+      //   .transition()
+      //   .duration(clockSpeed);
 
-       t.select(".y.axis")
-         .call(yAxis);
+       // t.select(".y.axis")
+       //   .call(yAxis);
 
       path
           //.transition()
@@ -156,8 +196,10 @@ var GameStockView = Backbone.View.extend({
           //.attr("transform", "translate(0,0)")
           .each('end', function(){
             // pop the old data point off the front
+            
             data.shift();
-            tick();
+            //tick();
+            updateY(data);            
           });
     };
 
