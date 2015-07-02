@@ -16,7 +16,7 @@ var WalletView = Backbone.View.extend({
     this.originalShares = 200;
     this.nShares = 200;
     this.adjClose = 5;
-    this.magnitudeBuySell = .2;
+    this.magnitudeBuySell = 0.2;
   },
 
   events: {

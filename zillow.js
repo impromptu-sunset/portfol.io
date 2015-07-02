@@ -2,17 +2,23 @@
 var Zillow = require('node-zillow');
  
  // move to env variable before pushing
-var zwsid= 'X1-ZWz1a6ntkoonij_5w3uy';
+var zwsid = 'X1-ZWz1a6ntkoonij_5w3uy';
 //Instantiate 
 
+// var 100k = [
+//   {
+//     zpid: ''
+//   },
+//   {
+//     address: 'Fleur de Lys',
+//     citystatezip: '90077'
+//   }
+// ];
+
 var addresses = {
-  expensive: {
-    address: '725 5th ave',
-    citystatezip: '10022'
-  },
   cheap: {
-    address: 'Curtis st',
-    citystatezip: '19833'
+    address: '230 sea cliff ave',
+    citystatezip: '94121'
   }
 };
 

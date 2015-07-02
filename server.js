@@ -7,6 +7,7 @@ var session = require('express-session');
 var bcrypt = require('bcrypt-nodejs');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
+var ebay = require('./ebay.js');
 
 var db = require('./db/config');
 var Users = require('./db/collections/users');
@@ -129,6 +130,8 @@ app.post('/stocks', function(req, res) {
 app.use('/api/zillow', zillow.getSearchResults);
 
 app.use('/api/stocks', handler.getStocks);
+
+app.use('/api/ebay', ebay.getEbayProduct);
 
 var port = process.env.PORT || 8080;
 
