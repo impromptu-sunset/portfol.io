@@ -223,7 +223,7 @@ label {
 }
 
 .x.axis path {
-  display: none;
+  /*display: none;*/
 }
 
 .y.axis .tick {
