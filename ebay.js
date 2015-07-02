@@ -1,10 +1,11 @@
 var request = require('request');
 
 // stores product categories
+// find new product category IDs at: http://www.isoldwhat.com/getcats/
 var categories = {
   house: {
     min: 15000,
-    max: 1000000,
+    max: 10000000,
     id: 12605
   },
   island: {
@@ -28,6 +29,21 @@ var categories = {
     max: 800000,
     id: 6001
   },
+  collectibles: {
+    min: 0,
+    max: 1000000,
+    id: 1
+  },
+  homeAndGarden: {
+    min: 10,
+    max: 20000,
+    id: 11700
+  },
+  fossils: {
+    min: 5, 
+    max: 50000,
+    id: 3213
+  }
 };
 
 // returns random integer from min(inclusive) to max (exclusive)
@@ -41,7 +57,6 @@ var getRandomObjProperty = function(obj) {
   var keys = Object.keys(obj);
   var numProps = keys.length;
   var randomIndex = getRandomInt(0, numProps);
-  console.log('RANDOM INDEX IS+++++', obj[keys[randomIndex]]);
   return obj[keys[randomIndex]];
 };
 
@@ -50,14 +65,21 @@ var getEbayProductCategory = function(cost) {
   var tempCategory;
   var category;
 
+  console.log('COST IS ', cost);
+
   if (cost < 0 ) {
     console.error(cost, 'ERROR: inputted cost is less than 0');
     return null;
   }
 
+  if (cost > 10000000) {
+    console.log('cost too high, returning house');
+    return categories.house;
+  }
+
   while (!foundCategory) {
     tempCategory = getRandomObjProperty(categories);
-    if (tempCategory.min <= cost) {
+    if (tempCategory.min <= cost && cost <= tempCategory.max) {
       foundCategory = true;
     }
     category = tempCategory;
@@ -76,8 +98,11 @@ var getEbayProduct = function(req, res) {
     res.send(500, { error: "must send a number to find ebay product" });
   }
   
+
   category = getEbayProductCategory(cost);
 
+  // DEBUG TO TEST SPECIFIC CATEGORIES:
+  // category = categories.homeAndGarden;
   if (!category) {
     res.send(500, { error: "unable to find a category" });
   }
@@ -103,10 +128,8 @@ var getEbayProduct = function(req, res) {
     // add the keyword to the end
     requestUrl += '&keywords=' + keyword;
   }
-  console.log(requestUrl);
 
   request(requestUrl, function(error, ebayRes, ebayData) {
-    console.log(ebayData);
     // TODO: send the first item in the response array which will be the highest price item
     res.send(ebayData);
   });
