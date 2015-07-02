@@ -61,7 +61,6 @@ var WalletView = Backbone.View.extend({
     var adjClose = this.adjClose;
     var currentCash = this.model.get('cash');
 
-    // debugger;
     var numSharesToSell = Math.round(this.originalShares * this.magnitudeBuySell);
 
     var cost = numSharesToSell * adjClose;

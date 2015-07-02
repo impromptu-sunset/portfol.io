@@ -5,6 +5,9 @@ var GameStockView = Backbone.View.extend({
 
   className: 'graph col-xs-4 col-md-4',
 
+  template: _.template('<button id="buy-button" class="btn btn-default">Buy</button> \
+                        <button id="sell-button" class="btn btn-default">Sell</button>'),
+
   initialize: function() {
     this.model.on('sync edited remove reset', this.render, this);
     var context = this;
@@ -74,10 +77,9 @@ var GameStockView = Backbone.View.extend({
 
     // line generation function
     var line = d3.svg.line()
-        //.interpolate("monotone")
+
         .x(function(d, i) { return x(d.date); })
-        .y(function(d, i) { return y(d.value); })
-        //.interpolate("basis");
+        .y(function(d, i) { return y(d.value); });
 
     // append svg and axes to graph container
     var svg = d3.select(this.el).append("svg")
@@ -170,10 +172,67 @@ var GameStockView = Backbone.View.extend({
 
    },
 
+
+  // controller
+
+  events: {
+    'click #buy-button': 'handleBuy',
+    'click #sell-button': 'handleSell'
+  },
+
+  handleBuy: function(event) {
+    // event.preventDefault();
+
+    // var nShares = this.nShares;
+    // var adjClose = this.adjClose;
+    // var currentCash = this.model.get('cash');
+
+    // // debugger;
+    // var numSharesToBuy = Math.round(this.originalShares * this.magnitudeBuySell);
+    // var cost = numSharesToBuy * adjClose;
+    // console.log('num shares to buy', numSharesToBuy);
+    // // console.log('you tried to buy!');
+
+    // if (currentCash - cost < 0) {
+    //   console.error('ERROR: trying to spend more cash than you have');
+    //   return;
+    // }
+    // this.model.set('cash', currentCash-cost);
+    // this.nShares = this.nShares + numSharesToBuy;
+    // console.log('new number of shares', this.nShares);
+
+  },
+
+  handleSell: function(event) {
+    // event.preventDefault();
+
+    // var nShares = this.nShares;
+    // var adjClose = this.adjClose;
+    // var currentCash = this.model.get('cash');
+
+    // var numSharesToSell = Math.round(this.originalShares * this.magnitudeBuySell);
+
+    // var cost = numSharesToSell * adjClose;
+
+    // if (nShares - numSharesToSell < 0){
+    //   console.error("ERROR: trying to sell more shares than you own");
+    //   return;
+    // }
+    // console.log('num shares to sell', numSharesToSell);
+    // // console.log('you tried to buy!');
+
+  
+    // this.model.set('cash', currentCash+cost);
+    // this.nShares = this.nShares - numSharesToSell;
+    // console.log('new number of shares', this.nShares);
+
+  },
+
   render: function() {
     this.$el.empty(); 
     //this.drawStockLine();
-    return this.$el;
+    return this.$el.html(this.template(this.model.attributes));
+    // return this.$el;
   }
 
 });
