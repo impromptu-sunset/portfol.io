@@ -57,7 +57,7 @@ var getEbayProductCategory = function(cost) {
 
   while (!foundCategory) {
     tempCategory = getRandomObjProperty(categories);
-    if (tempCategory.min < cost) {
+    if (tempCategory.min <= cost) {
       foundCategory = true;
     }
     category = tempCategory;
@@ -69,7 +69,14 @@ var getEbayProductCategory = function(cost) {
 var getEbayProduct = function(req, res) {
 
   var cost = req.body.cost;
-  var category = getEbayProductCategory(cost);
+  var category;
+
+
+  if (typeof cost !== 'number') {
+    res.send(500, { error: "must send a number to find ebay product" });
+  }
+  
+  category = getEbayProductCategory(cost);
 
   if (!category) {
     res.send(500, { error: "unable to find a category" });
