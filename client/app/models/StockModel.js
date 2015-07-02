@@ -56,7 +56,7 @@ var StockModel = Backbone.Model.extend({
 
     var houseLatLng = new google.maps.LatLng(houseLat, houseLng);
 
-    var streetViewDistanceRange = 10;
+    var streetViewDistanceRange = 50;
 
     var panoramaOptions = {
       disableDefaultUI: true,
@@ -68,18 +68,23 @@ var StockModel = Backbone.Model.extend({
     var panorama = new google.maps.StreetViewPanorama(document.getElementById('panorama-box'), panoramaOptions);
 
     service.getPanoramaByLocation(houseLatLng, streetViewDistanceRange, function(panoData, status) {
-      var carLatLng = panoData.location.latLng;
+      if(status === google.maps.StreetViewStatus.OK){
+        var carLatLng = panoData.location.latLng;
 
-      var heading = google.maps.geometry.spherical.computeHeading(carLatLng, houseLatLng);
-      console.log(heading);
-      console.log(panoData, status);
-      panorama.setPano(panoData.location.pano);
-      panorama.setPov({
-           heading: heading,
-            zoom: 1,
-            pitch: 0
-        });
-      panorama.setVisible(true);
+        var heading = google.maps.geometry.spherical.computeHeading(carLatLng, houseLatLng);
+        console.log(heading);
+        console.log(panoData, status);
+        panorama.setPano(panoData.location.pano);
+        panorama.setPov({
+             heading: heading,
+              zoom: 1,
+              pitch: 0
+          });
+        panorama.setVisible(true);
+      }
+      else {
+        console.error('ERROR: panorama does not exist at that location');
+      }
     });
 
   },
