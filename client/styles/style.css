@@ -226,6 +226,10 @@ label {
   display: none;
 }
 
+.y.axis .tick {
+  /*display: none;*/
+}
+
 .line {
   fill: none;
   stroke: steelblue;

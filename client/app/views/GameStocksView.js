@@ -3,7 +3,7 @@ find more information on mbostock's page for charting line charts: http://bl.ock
 
 var GameStocksView = Backbone.View.extend({
 
-  className: 'graph col-xs-12 col-md-12',
+  className: 'graphs col-xs-12 col-md-12',
 
   initialize: function() {
     this.collection.on('sync edited remove reset', this.render, this);
@@ -52,6 +52,7 @@ var GameStocksView = Backbone.View.extend({
         console.log("model is: ", model);
         var gameStockView = new GameStockView({model: model});
         this.$el.append(gameStockView.render());
+        gameStockView.drawStockLine();
       }, this);
       // this.drawStocks(this);
       return this.$el;
