@@ -48,13 +48,15 @@ var GameStockView = Backbone.View.extend({
     // first n points of data
     var data = stockData.splice(0, n);
 
-    var margin = {top: 20, right: 20, bottom: 20, left: 40},
+    var margin = {top: 20, right: 20, bottom: 20, left: 50},
         width = this.$el.width() - margin.left - margin.right,
         height = 300 - margin.top - margin.bottom;
 
-    var x = d3.scale.linear()
-        .domain([0, n - 1])
-        .range([0, width]);
+    var x = d3.time.scale().range([0, width]).nice(d3.time.year, 1);
+
+    // var x = d3.scale.linear()
+    //     .domain([0, n - 1])
+    //     .range([0, width]);
 
     //y-axis scaled in standard linear format ($ values)
     var y = d3.scale.linear()
@@ -72,7 +74,7 @@ var GameStockView = Backbone.View.extend({
     // line generation function
     var line = d3.svg.line()
         //.interpolate("monotone")
-        .x(function(d, i) { return x(i); })
+        .x(function(d, i) { return x(d.date); })
         .y(function(d, i) { return y(d.value); })
         //.interpolate("basis");
 
@@ -92,8 +94,8 @@ var GameStockView = Backbone.View.extend({
 
     svg.append("g")
         .attr("class", "x axis")
-        .attr("transform", "translate(0," + y(0) + ")")
-        .call(d3.svg.axis().scale(x).orient("bottom"));
+        .attr("transform", "translate(0,"+height+")")
+        .call(d3.svg.axis().scale(x).orient("bottom").ticks(1));
 
     svg.append("g")
         .attr("class", "y axis")
@@ -108,9 +110,13 @@ var GameStockView = Backbone.View.extend({
         .attr("class", "line")
         .attr("d", line);
 
-    var updateY = function(data){
+    var tick = function(){
          //update domain
-         data.push(stockData.shift());
+         if(stockData.length===0){
+          console.log("LAST ITEM ", data[data.length - 1]);
+          return;
+         }
+          data.push(stockData.shift());
           var middle = data[data.length - 1].value;
           
           
@@ -119,19 +125,26 @@ var GameStockView = Backbone.View.extend({
           .attr("transform", null);
           
           y.domain([middle - 500, middle + 500]);
-          // y.domain([
-          //   d3.min(data, function(d) { return d.value; }),
-          //   d3.max(data, function(d) { return d.value; })
-          // ]); 
-          //change scale
-          //yScale.domain(yDomain); 
+          x.domain([
+            d3.min(data, function(d) { return d.date; }), 
+            d3.max(data, function(d) { return d.date; })
+          ]);
+         
           yAxis = d3.svg.axis().scale(y).orient("left");
+          xAxis = d3.svg.axis().scale(x).orient("bottom").ticks(1);
+
           //switch to new scale
           svg.select(".y.axis")
           .transition()
           .duration(clockSpeed)
           .ease("linear")
           .call(yAxis);
+
+          svg.select(".x.axis")
+          .transition()
+          .duration(clockSpeed)
+          .ease("linear")
+          .call(xAxis);
             
             // update the line
           path
@@ -139,73 +152,21 @@ var GameStockView = Backbone.View.extend({
           .duration(clockSpeed)
           .ease("linear")
           .attr("d", line)
-          .attr("transform", "translate(" + x(-1) + ",0)")
+          .attr("transform", "translate(0,0)")
           .each('end', function(){
             // pop the old data point off the front
             
             data.shift();
-            updateY(data);
+
+            tick(data);
             //updateY(data);
           });   
            
-    }
-    var tick = function() {
-
-      // push a new data point onto the back
-      data.push(stockData.shift());
-
-      
-      //var middle = data[data.length - 1].value;
-      //y.domain([middle - 500, middle + 500]);
-      //  y.domain([
-      //   d3.min(data, function(d) { return d.value; }),
-      //   d3.max(data, function(d) { return d.value; })
-      // ]);
-      //yAxis = d3.svg.axis().scale(y).orient("left");
-      // redraw the line, and slide it to the left
-
-      // var middle = data[data.length - 2].value - data[data.length - 1].value;
-      // d3.select('.y.axis')        
-      //   .transition()
-      //     .duration(clockSpeed)
-      //     .ease("linear")
-      //     .attr('transform', 'translate(0, ' + y(middle) + ')');
-      // svg.select('.line')
-        // .attr("d", line)
-        // .attr("transform", null);
-
-      // var t = svg
-      //   .transition()
-      //   .duration(clockSpeed);
-
-       // t.select(".y.axis")
-       //   .call(yAxis);
-
-      path
-          //.transition()
-          //.duration(clockSpeed)
-          .attr("d", line)
-          .attr("transform", null)
-          .transition()
-          .duration(clockSpeed)
-          //.duration(clockSpeed)
-          .ease("linear")
-          //.transition()
-          //.duration(clockSpeed)
-          .attr("transform", "translate(" + x(-1) + ",0)")
-          //.attr("transform", "translate(0,0)")
-          .each('end', function(){
-            // pop the old data point off the front
-            
-            data.shift();
-            //tick();
-            updateY(data);            
-          });
     };
 
-    tick();
+     tick();
 
-  },
+   },
 
   render: function() {
     this.$el.empty(); 
