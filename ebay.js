@@ -116,7 +116,7 @@ var getEbayProduct = function(req, res) {
           '&SECURITY-APPNAME=Jonathan-3653-441d-a058-edbde13c5f5c' +
           '&RESPONSE-DATA-FORMAT=JSON' +
           '&REST-PAYLOAD' +
-          '&paginationInput.entriesPerPage=1' +
+          '&paginationInput.entriesPerPage=3' +
           '&categoryId=' + categoryId +
           '&sortOrder=CurrentPriceHighest' +
           '&itemFilter(0).name=MaxPrice' +
