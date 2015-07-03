@@ -13,6 +13,7 @@ var DashboardView = Backbone.View.extend({
     this.walletView = new WalletView({model: this.wallet});
     this.lifeEventsView = new LifeEventsView({collection: params.life_events, wallet: this.wallet});
     this.gameStocksView = new GameStocksView({collection: this.collection});
+    this.resultsView = new ResultsView({collection: new ResultsCollection()});
 
     this.render();
 
@@ -61,8 +62,8 @@ var DashboardView = Backbone.View.extend({
       // after we create the wallet-box div, then we can render the wallet view
       // which references the $el value and manages its own updating
       this.walletView.$el,
-      this.lifeEventsView.$el
-
+      this.lifeEventsView.$el,
+      this.resultsView.$el
     ]);
     // this.delegateEvents();
     // this.bindListeners();

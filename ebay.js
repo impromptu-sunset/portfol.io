@@ -1,4 +1,5 @@
 var request = require('request');
+var itemGetter = require('./randomitem.js');
 
 // stores product categories
 // find new product category IDs at: http://www.isoldwhat.com/getcats/
@@ -123,7 +124,7 @@ var getEbayProduct = function(req, res) {
           '&SECURITY-APPNAME=Jonathan-3653-441d-a058-edbde13c5f5c' +
           '&RESPONSE-DATA-FORMAT=JSON' +
           '&REST-PAYLOAD' +
-          '&paginationInput.entriesPerPage=3' + // changes the number of results that the API returns
+          '&paginationInput.entriesPerPage=10' + // changes the number of results that the API returns
           '&categoryId=' + categoryId +
           '&sortOrder=CurrentPriceHighest' +
           '&itemFilter(0).name=MaxPrice' + // return the most expensive items that we can afford
@@ -137,20 +138,25 @@ var getEbayProduct = function(req, res) {
   }
 
   request(requestUrl, function(error, ebayRes, ebayData) {
-    var results;
-    var result;
+    var results = {};
+    var result = {};
     var randomIndex;
 
     // stringify the ebay result JSON
     results = JSON.parse(ebayData);
     // store the top x items that can be purchased 
     results = results.findItemsAdvancedResponse[0].searchResult[0].item;
-    // generate a random index for the 
+    // generate a random index for the results
     randomIndex = getRandomInt(0, results.length);
     // store the random result
-    result = results[randomIndex];
+    result._ebay = results[randomIndex];
+
+    // get a random item as well
+    result._randomItem = itemGetter.getRandomItem(cost);
+
     // send a JSON version of the random result
-    res.json(result);
+    res.status(200).send(result);
+    // res.send(result);
   });
 };
 

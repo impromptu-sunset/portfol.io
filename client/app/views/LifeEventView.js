@@ -10,7 +10,7 @@ var LifeEventView = Backbone.View.extend({
 
   initialize: function(params) {
     this.wallet = params.wallet;
-    console.log(params);
+    // console.log(params);
   },
 
   render: function() {
