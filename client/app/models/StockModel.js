@@ -176,6 +176,15 @@ var StockModel = Backbone.Model.extend({
     // console.log('set adjClose to ', this.get('adjClose'));
   },
 
+  getAdjClose: function() {
+    return this.get('adjClose');
+  },
+
+  buyAmount: function(stocks) {
+    var current = this.get('nShares');
+    this.set('nShares', current + stocks);
+  },
+
   getDiff: function() {
     return this.get('diff');
   },

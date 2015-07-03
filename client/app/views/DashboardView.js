@@ -17,31 +17,64 @@ var DashboardView = Backbone.View.extend({
 
     this.render();
 
-    this.collection.on('game_over', function(){
+    this.listenTo(this.collection, 'game_over', function(){
       this.renderPotentialValue();
-    }, this);
+    });
 
-    this.collection.on('life_event', function(){
+    this.listenTo(this.collection, 'life_event', function(){
       this.lifeEventsView.addLifeEvent();
+    });
+
+    this.listenTo(this.collection, 'resize', function() {
+      this.wallet.destroy();
+      this.walletView.remove();
+      this.gameStocksView.remove();
+      this.remove();
+    });
+
+    // buy stock, subtract money from wallet
+    this.listenTo(this.collection, 'buy', function (stock) {
+      // console.log('inside dashboardView buy/sell listener');
+      console.log(stock);
+
+      // if user is broke, return without buying
+      if (this.walletView.model.getCash() === 0) return;
+
+      // amount of cash in wallet
+      var skrill = this.walletView.model.getCash();
+
+      var magnitudeBuySell = 0.2;
+      var originalShares = stock.getStartShares();
+      
+      // number of stocks to buy, based on original stock value
+      var numStocksToBuy = originalShares * magnitudeBuySell;
+      
+      // dollar cost of stocks given stock's current adjClose value
+      var cost = numStocksToBuy * stock.getAdjClose();
+      
+      // if you have less money than the standard buy amount, spend remaining money
+      // on however many shares you can afford
+      if (cost > skrill) {
+        numStocksToBuy = skrill / stock.getAdjClose();
+        cost = skrill;
+      }
+
+      stock.buyAmount(numStocksToBuy);
+      this.walletView.model.spend(cost);
+
     }, this);
 
-    // add or subtract money from wallet
-    this.collection.on('buy sell', function() {
-      // console.log('inside dashboardView buy/sell listener');
+    // sell stock, add money to wallet
+    this.listenTo(this.collection, 'sell', function () {
       var cost = this.collection.getValueDiff();
-      if (cost > 0){
-        this.walletView.model.buy(cost);
-      } else {
-        this.walletView.model.spend(cost);
-      }
+      this.walletView.model.buy(cost);
     }, this);
     
     // show value of investment
-    this.collection.on('accrual', function (e) {
+    this.listenTo(this.collection, 'accrual', function (model) {
       console.log('inside dashboardView accrual listener');
       var total = this.collection.getValue();
       this.walletView.model.investmentValue(total);
-      // this.walletView.model.updateInvestment(e.model);
     }, this);
    
   },
