@@ -13,8 +13,7 @@ var GameStockView = Backbone.View.extend({
     // this.model.on('remove reset', this.render, this);
     var context = this;
     $(window).on("resize", function() {
-      context.trigger('resize');
-      // context.render.apply(context);
+      context.render.apply(context);
     });
     // this.render();
   },
@@ -24,6 +23,8 @@ var GameStockView = Backbone.View.extend({
 
     // number of samples in the data array
     var sampleSize = 365;
+    // DEBUG REDUCED SAMPLING SIZE FOR TESTING:
+    // var sampleSize = 3;
 
     var rawData = this.model.getTrajectory();
     if (rawData.length <= sampleSize) {
@@ -212,8 +213,15 @@ var GameStockView = Backbone.View.extend({
     event.preventDefault();
     // console.log('trying to buy');
 
-    this.model.trigger('buy', this.model); 
+    var originalShares = this.model.getStartShares();
+    var nShares = this.model.getNShares();
 
+    this.model.setNShares(nShares + (originalShares * this.magnitudeBuySell));
+
+    this.model.trigger('buy');
+
+    // this.delegateEvents();
+ 
   },
 
   handleSell: function(event) {
@@ -232,11 +240,13 @@ var GameStockView = Backbone.View.extend({
 
     this.model.trigger('sell');
 
+    // this.delegateEvents();
+
   },
 
   render: function() {
     console.log('rendering gameStockView');
-    this.$el.empty();
+    // this.$el.empty();
     return this.$el.html(this.template(this.model.attribtes));
     // '<button id="buy-button" class="btn btn-default">Buy</button> \
     //                 <button id="sell-button" class="btn btn-default">Sell</button>');
