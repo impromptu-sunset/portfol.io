@@ -19,7 +19,9 @@ var DashboardView = Backbone.View.extend({
 
     this.listenTo(this.collection, 'game_over', function(){
       this.renderPotentialValue();
-    });
+      console.log('GAME HAS ENDED');
+      this.renderResults();
+    }, this);
 
     this.listenTo(this.collection, 'life_event', function(){
       this.lifeEventsView.addLifeEvent();
@@ -130,6 +132,10 @@ var DashboardView = Backbone.View.extend({
 
   renderWallet: function() {
     this.walletView.render();
+  },
+
+  renderResults: function() {
+    this.resultsView.render();
   }
 
 });
