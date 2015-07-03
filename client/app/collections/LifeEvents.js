@@ -3,6 +3,16 @@ var LifeEvents = Backbone.Collection.extend({
 
   model: LifeEventModel,
   url: '/data/life_events',
+  total_life_events: 0,
+  
+  initialize: function(){
+    this.on('updateTotal', function(change){
+      console.log("CHANGE IS ", change);
+      if(change){
+        this.total_life_events += Number(change);
+      }
+    });
+  },
   parse: function(data){
     // called when we call fetch on collection
     // want to calculate probability of each

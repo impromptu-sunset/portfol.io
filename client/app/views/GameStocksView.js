@@ -17,9 +17,11 @@ var GameStocksView = Backbone.View.extend({
   reset_timeout: function(){
     clearTimeout(this.timeout);
     console.log("OVER!");
+    console.log("FINAL COLLECTION ",this.collection);
   },
 
   render: function() {
+    // stop listening.
     this.$el.hide();
     this.$el.empty();
     if (this.collection.length > 0) {  

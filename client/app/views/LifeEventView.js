@@ -29,9 +29,11 @@ var LifeEventView = Backbone.View.extend({
     if(this.model.get('by') === 'neg'){
       text = "YOU LOST";
       value = wallet_amount - toChange;
+      this.model.trigger('updateTotal', Number("-"+toChange));
     } else{
       text = "YOU WON";
       value = wallet_amount + toChange;
+      this.model.trigger('updateTotal', toChange);
     }
     this.$el.html(this.template({
       "event": this.model.get('event'),

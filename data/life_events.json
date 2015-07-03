@@ -14,7 +14,7 @@
   {
     "event": "You won the lottery!",
     "amount": 1000000,
-    "probability": 5,
+    "probability": 1,
     "by": "pos"
   },
   {

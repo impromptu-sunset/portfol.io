@@ -78,6 +78,7 @@ var GameStockView = Backbone.View.extend({
        d3.max(data, function(d) { return d.value; })
      ]);
 
+    var stockScale = data[0].adjClose;
     // line generation function
     var line = d3.svg.line()
 
@@ -130,6 +131,8 @@ var GameStockView = Backbone.View.extend({
 
     var tick = function() {
         //update domain
+
+
         if(stockData.length===0){
           console.log("LAST ITEM ", data[data.length - 1]);
 
@@ -150,7 +153,7 @@ var GameStockView = Backbone.View.extend({
         .attr("d",line)
         .attr("transform", null);
         
-        y.domain([middle - 500, middle + 500]);
+        y.domain([middle - stockScale, middle + stockScale]);
         x.domain([
           d3.min(data, function(d) { return d.date; }), 
           d3.max(data, function(d) { return d.date; })
@@ -216,7 +219,7 @@ var GameStockView = Backbone.View.extend({
     this.model.trigger('buy');
 
     // this.delegateEvents();
-
+ 
   },
 
   handleSell: function(event) {
