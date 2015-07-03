@@ -121,21 +121,22 @@ var Stocks = Backbone.Collection.extend({
   },
 
   getValueDiff: function() {
-    // console.log('inside Stocks collection getValueDiff');
     var currentValue = 0, oldValue = this.value;
-    // console.log('current investment value is: ', oldValue);
     this.each(function(stock) {
-      // console.log('stock value is: ', stock.getGameValue());
       currentValue += stock.getGameValue();
     });
-    // console.log(currentValue);
     this.value = currentValue;
-    // console.log('value difference is: ', currentValue - oldValue);
     return oldValue - currentValue;
   },
 
   getValue: function() {
-    return this.getValueDiff();
+    var val = 0;
+    this.each(function(stock) {
+      val += stock.getGameValue();
+    });
+    this.value = val;
+    console.log(this.value);
+    return this.value;
   }
 
 

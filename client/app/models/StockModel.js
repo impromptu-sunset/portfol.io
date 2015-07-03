@@ -163,8 +163,15 @@ var StockModel = Backbone.Model.extend({
   },
 
   setAdjClose: function(number) {
+    var oldValue = this.getGameValue();
     this.set('adjClose', number);
+    var newValue = this.getGameValue();
+    this.set('diff', newValue - oldValue);
     // console.log('set adjClose to ', this.get('adjClose'));
+  },
+
+  getDiff: function() {
+    return this.get('diff');
   },
 
   // returns the stock's history in d3-consumable format

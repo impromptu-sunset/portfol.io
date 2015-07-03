@@ -6,17 +6,22 @@ var WalletModel = Backbone.Model.extend({
     'investment': 0
   },
 
-  accrue: function(money) {
+  accrue: function(moolah) {
     // console.log('inside wallet model accrue');
     // console.log('amount to add is: ', money);
     var dough = this.get('cash');
-    this.set('cash', dough + money);
+    this.set('cash', dough + moolah);
   },
 
-  spend: function(money) {
+  spend: function(moolah) {
     // console.log('inside wallet model spend');
     var cheddar = this.get('cash');
-    this.set('cash', cheddar + money);
+    this.set('cash', cheddar + moolah);
   },
+
+  investmentValue: function(moolah) {
+    var bread = this.get('investment');
+    this.set('investment', bread - moolah);
+  }
 
 });
