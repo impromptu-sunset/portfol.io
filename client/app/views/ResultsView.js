@@ -1,26 +1,18 @@
 var ResultsView = Backbone.View.extend({
   initialize: function() {
-    console.log('made the results view');
     this.render();
 
-    console.log('result collection is', this.collection);
-
     this.collection.on('add', function() {
-      console.log('result model changed');
       this.render();
     }, this);
-
-    // this.collection.add({result1: 'hello from collection'});
+    // DEBUG: this function gets the values for the earned and potential cash value
     this.getPurchaseResult();
   },
 
   render: function(){
-    // this.$el.html('<p>hello from results render</p>');
-    // this.$el.children.detach();
-
+    // add the earned and potential results to the DOM
     return this.$el.html('<h3>Results</h3>').append(
       this.collection.map(function(result) {
-        console.log('TRYING TO APPEND', result);
         return new ResultView({model: result}).render();
       })
     );
@@ -28,12 +20,12 @@ var ResultsView = Backbone.View.extend({
 
   className: 'results-box col-xs-12',
 
-  getPurchaseResult: function() {
+  getPurchaseResult: function(earned, potential) {
     var context = this;
-    var earnedCash = 8237;
-    var potentialCash = 923827;
-    var resultObj = {};
+    var earnedCash = earned || 17;
+    var potentialCash = potential || 33772;
 
+    // make an ajax call with the earned cash
     $.ajax({
       type: "POST",
       contentType: "application/json",
@@ -42,10 +34,13 @@ var ResultsView = Backbone.View.extend({
       dataType: "json"
       })
       .done(function(data) {
+        // store the results data
         resultObj.ebay = data._ebay;
         resultObj.randomItem = data._randomItem;
         resultObj.status = "earned";
+        // add a new model to the collection with the results
         context.collection.add([resultObj]);
+        // make an ajax call with the potential cash
         $.ajax({
           type: "POST",
           contentType: "application/json",
@@ -54,10 +49,11 @@ var ResultsView = Backbone.View.extend({
           dataType: "json"
           })
           .done(function(data) {
+            // store the results data
             resultObj.ebay = data._ebay;
             resultObj.randomItem = data._randomItem;
             resultObj.status = "potential";
-
+            // add a new model to the collection with the results
             context.collection.add([resultObj]);
           });
       });

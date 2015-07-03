@@ -154,7 +154,6 @@ var getEbayProduct = function(req, res) {
     // get a random item as well
     result._randomItem = itemGetter.getRandomItem(cost);
 
-    console.log(result._randomItem);
     // send a JSON version of the random result
     res.status(200).send(result);
     // res.send(result);

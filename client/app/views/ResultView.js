@@ -19,7 +19,6 @@ var ResultView = Backbone.View.extend({
 
   render: function() {
     var resultStatus = this.model.get('status');
-    console.log('RESULT STATUS IS', resultStatus);
     this.$el.empty();
 
     this.$el.addClass(resultStatus);
