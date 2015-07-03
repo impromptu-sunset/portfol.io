@@ -8,14 +8,18 @@ var DashboardView = Backbone.View.extend({
     // this.graphView = new GraphView({collection: this.collection});
     // this.infoView = new InfoView({collection: this.collection});
 
-
+    this.lifeEvents = params.life_events;
     this.wallet = new WalletModel();
     this.walletView = new WalletView({model: this.wallet});
-    this.lifeEventsView = new LifeEventsView({collection: params.life_events, wallet: this.wallet});
+    this.lifeEventsView = new LifeEventsView({collection: this.lifeEvents, wallet: this.wallet});
     this.gameStocksView = new GameStocksView({collection: this.collection});
     this.resultsView = new ResultsView({collection: new ResultsCollection()});
 
     this.render();
+
+    this.collection.on('game_over', function(){
+      this.renderPotentialValue();
+    }, this);
 
     this.collection.on('life_event', function(){
       this.lifeEventsView.addLifeEvent();
@@ -44,6 +48,22 @@ var DashboardView = Backbone.View.extend({
 
   setUsername: function(name) {
     this.infoView.setUsername(name);
+  },
+
+  // simplified version your max possible Return on Invesvent
+  renderPotentialValue: function(){
+    
+    var total_potential = this.collection.reduce(function(memo, num){
+      console.log("memo", memo);
+      console.log("num", num);
+      memo += num.get('potential');
+    },0, this);
+
+    var life_events_total = this.lifeEvents.total_life_events;
+    var potential = total_potential + life_events_total;
+    this.$('#potential').remove();
+    this.$el.append('<div id="potential">Potential Value '+ potential+'</div>');
+
   },
 
   render: function(){

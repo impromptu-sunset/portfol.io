@@ -7,9 +7,9 @@ var StockModel = Backbone.Model.extend({
     if (response.length !== 0) {
       this.set('history', response); // "history" is just an array of dates, stock prices, etc
       this.set('amount', parseFloat(this.get('amount')));
-      this.set('potential', this.get('amount'));
-      // this.set('nShares', 1);
-      this.set('nShares', this.get('amount') / this.get('history')[0].adjClose);
+      this.set('potential', 0);
+      //this.set('nShares', this.get('amount') / this.get('history')[0].adjClose);
+      this.set('nShares', 0);
       // this.set('originalShares', 100);
       this.set('originalShares', this.get('amount') / this.get('history')[0].adjClose);
       this.set('adjClose', this.get('history')[0].adjClose);
@@ -182,7 +182,8 @@ var StockModel = Backbone.Model.extend({
     return _.map(this.get('history'), function(snapshot, index) {
       var values = {};
       values.date = new Date(snapshot.date);
-      values.value = context.getValue(index);
+      //values.value = context.getValue(index);
+      values.value = snapshot.adjClose;
       values.symbol = snapshot.symbol;
       values.adjClose = snapshot.adjClose;
       return values;
