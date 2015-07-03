@@ -12,8 +12,21 @@ var ResultsView = Backbone.View.extend({
   render: function(){
     this.$el.html('<p>hello from results render</p>');
   },
-  
-  getPurchaseResult: function() {
 
+  getPurchaseResult: function() {
+    var earnedCash = 8237;
+    var potentialCash = 923827;
+
+    $.ajax({
+      type: "POST",
+      contentType: "application/json",
+      url: '/api/ebay',
+      data: { cost: earnedCash },
+      dataType: "json"
+      })
+      .done(function(data) {
+        this.model.set('ebayResult', data.ebayResult);
+        this.model.set('randomResult', data.)
+      });
   }
 });
