@@ -118,7 +118,7 @@ var DashboardView = Backbone.View.extend({
       // re-renders. We want the cash value to re-render everytime the cash value
       // increases or decreases, so it is necessary to create a DOM element
       // for the wallet view to reference when it is re-rendering its value.
-      '<div id="wallet-box">Wallet Box!</div>',
+      // '<div id="wallet-box">Wallet Box!</div>',
       // after we create the wallet-box div, then we can render the wallet view
       // which references the $el value and manages its own updating
       this.walletView.$el,
@@ -135,7 +135,9 @@ var DashboardView = Backbone.View.extend({
   },
 
   renderResults: function() {
-    this.wallet.remove();
+    this.gameStocksView.remove();
+    this.walletView.remove();
+    this.lifeEventsView.remove();
     this.$el.append(this.resultsView.render());
   }
 
