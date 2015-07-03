@@ -25,18 +25,19 @@ var DashboardView = Backbone.View.extend({
       // console.log('inside dashboardView buy/sell listener');
       var cost = this.collection.getValueDiff();
       if (cost > 0){
-        this.walletView.model.accrue(cost);
+        this.walletView.model.buy(cost);
       } else {
         this.walletView.model.spend(cost);
       }
     }, this);
     
     // show value of investment
-    // this.collection.on('accrual', function() {
-    //   console.log('inside dashboardView accrual listener');
-    //   var investments = this.collection.getValue();
-    //   wallet.set('investment', investments);
-    // }, this);
+    this.collection.on('accrual', function (e) {
+      console.log('inside dashboardView accrual listener');
+      var total = this.collection.getValue();
+      this.walletView.model.investmentValue(total);
+      // this.walletView.model.updateInvestment(e.model);
+    }, this);
    
   },
 

@@ -5,10 +5,12 @@ var WalletView = Backbone.View.extend({
 
   // el: '#wallet-box',
 
-  template: _.template('<h3>$<%= numeral(cash).format("0,0.00") %></h3><h3>$<%= numeral(investment).format("0,0.00") %></h3>'),
+  template: _.template('<h3>Cash Available: $<%= numeral(cash).format("0,0.00") %></h3> \
+                        <h3>Portfolio Value: $<%= numeral(investment).format("0,0.00") %></h3> \
+                        '),
 
   initialize: function() {
-    this.model.on('change', this.render, this);
+    this.model.on('buy sell accrue', this.render, this);
     this.render();
   },
 

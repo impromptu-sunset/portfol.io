@@ -8,7 +8,9 @@ var StockModel = Backbone.Model.extend({
       this.set('history', response); // "history" is just an array of dates, stock prices, etc
       this.set('amount', parseFloat(this.get('amount')));
       this.set('potential', this.get('amount'));
+      // this.set('nShares', 1);
       this.set('nShares', this.get('amount') / this.get('history')[0].adjClose);
+      // this.set('originalShares', 100);
       this.set('originalShares', this.get('amount') / this.get('history')[0].adjClose);
       this.set('adjClose', this.get('history')[0].adjClose);
       var max = this.get('amount');
@@ -163,8 +165,15 @@ var StockModel = Backbone.Model.extend({
   },
 
   setAdjClose: function(number) {
+    var oldValue = this.getGameValue();
     this.set('adjClose', number);
+    var newValue = this.getGameValue();
+    this.set('diff', newValue - oldValue);
     // console.log('set adjClose to ', this.get('adjClose'));
+  },
+
+  getDiff: function() {
+    return this.get('diff');
   },
 
   // returns the stock's history in d3-consumable format
