@@ -18,7 +18,7 @@ var DashboardView = Backbone.View.extend({
     this.render();
 
     this.listenTo(this.collection, 'game_over', function(){
-      this.renderPotentialValue();
+      // this.renderPotentialValue();
       console.log('GAME HAS ENDED');
       this.renderResults();
     }, this);
@@ -150,7 +150,7 @@ var DashboardView = Backbone.View.extend({
     var context = this;
 
     sampleStockDataA = {
-      symbol: 'AAPL',
+      symbol: 'AIG',
       from: '2000-01-01', //FORMAT: 'YYYY-MM-DD',
       to: '2015-07-3',     //FORMAT: 'YYYY-MM-DD', Currently unnecessary because we always retrieve to the latest date
       amount: 1,
@@ -158,7 +158,15 @@ var DashboardView = Backbone.View.extend({
     };
 
     sampleStockDataB = {
-      symbol: 'MSFT',
+      symbol: 'APC',
+      from: '2000-01-01', //FORMAT: 'YYYY-MM-DD',
+      to: '2015-07-3',     //FORMAT: 'YYYY-MM-DD', Currently unnecessary because we always retrieve to the latest date
+      amount: 1,
+      period: 'd'          // 'd' (daily), 'w' (weekly), 'm' (monthly), 'v' (dividends only) 
+    };
+
+    sampleStockDataC = {
+      symbol: 'OMX',
       from: '2000-01-01', //FORMAT: 'YYYY-MM-DD',
       to: '2015-07-3',     //FORMAT: 'YYYY-MM-DD', Currently unnecessary because we always retrieve to the latest date
       amount: 1,
@@ -187,11 +195,6 @@ var DashboardView = Backbone.View.extend({
         sampleStockA.parse(data);
         context.collection.add(sampleStockA);
 
-        // resultObj.ebay = data._ebay;
-        // resultObj.randomItem = data._randomItem;
-        // resultObj.status = "potential";
-        // // add a new model to the collection with the results
-        // context.collection.add([resultObj]);
       });
 
       $.ajax({
@@ -206,12 +209,21 @@ var DashboardView = Backbone.View.extend({
           sampleStockB.parse(data);
           context.collection.add(sampleStockB);
 
-          // resultObj.ebay = data._ebay;
-          // resultObj.randomItem = data._randomItem;
-          // resultObj.status = "potential";
-          // // add a new model to the collection with the results
-          // context.collection.add([resultObj]);
         });
+
+        $.ajax({
+          type: "POST",
+          contentType: "application/json",
+          url: '/api/stocks',
+          data: JSON.stringify(sampleStockDataC),
+          dataType: "json"
+          })
+          .done(function(data) {
+            sampleStockC = new StockModel();
+            sampleStockC.parse(data);
+            context.collection.add(sampleStockC);
+
+          });
 
     // sampleStockA.fetch({data: sampleStockDataA, type: 'POST'}).done(function() {
     //   console.log('adding the new stock to the collection');

@@ -26,6 +26,7 @@ var AppView = Backbone.View.extend({
   initialize: function(){
     // this.formView = new FormView({collection: this.collection});
     this.dashboardView = new DashboardView({collection: this.collection, life_events: this.model.get('life_events')});
+    this.renderNavbar();
     this.renderDashboard();
     //this.lifeEventsView = new LifeEventsView({collection: this.model.get('life_events')});
     // this.aboutusView = new AboutUsView();
@@ -56,6 +57,11 @@ var AppView = Backbone.View.extend({
       this.dashboardView.$el,
       // this.lifeEventsView.$el
     ]);
+  },
+
+  renderNavbar: function(){
+    var navbar = $(this.navDiv);
+    this.$el.append(navbar);
   },
 
   renderDashboard: function() {
