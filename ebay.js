@@ -142,7 +142,7 @@ var getEbayProduct = function(req, res) {
     var randomIndex;
 
     // stringify the ebay result JSON
-    results = JSON.parse(ebayData)
+    results = JSON.parse(ebayData);
     // store the top x items that can be purchased 
     results = results.findItemsAdvancedResponse[0].searchResult[0].item;
     // generate a random index for the 
