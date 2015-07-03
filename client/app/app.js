@@ -5,12 +5,12 @@
   var router = new AppRouter();
 
   router.on('route:front',function(){
-    appView.render();
+    // appView.render();
   });
 
   router.on('route:new',function(){
     appView.collection.reset(null);
-    appView.render();
+    // appView.render();
     window.location.hash = 'front';
   });
   

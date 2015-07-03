@@ -9,12 +9,12 @@ var GameStockView = Backbone.View.extend({
                         <button id="sell-button" class="btn btn-default">Sell</button>'),
 
   initialize: function() {
-    this.model.on('sync edited remove reset', this.render, this);
+    // this.model.on('remove reset', this.render, this);
     var context = this;
     $(window).on("resize", function() {
       context.render.apply(context);
     });
-    //this.render();
+    // this.render();
   },
 
   // creates an array of data (of length sampleSize)
@@ -36,9 +36,11 @@ var GameStockView = Backbone.View.extend({
       return result;
     }
   },
+
   drawStockLine: function() {
 
-    var model = this;
+    var context = this;
+
     // time to each new data point, in ms
     var clockSpeed = 300;
 
@@ -113,64 +115,67 @@ var GameStockView = Backbone.View.extend({
         .attr("class", "line")
         .attr("d", line);
 
-    var tick = function(){
-         //update domain
-         if(stockData.length===0){
+    var tick = function() {
+        //update domain
+        if(stockData.length===0){
           console.log("LAST ITEM ", data[data.length - 1]);
-          model.trigger("game_over");
+
+          //this was changed on merge!!!!!!
+          context.trigger("game_over");
           return;
-         }
-          data.push(stockData.shift());
-          var middle = data[data.length - 1].value;
-          
-          
-          path
-          .attr("d",line)
-          .attr("transform", null);
-          
-          y.domain([middle - 500, middle + 500]);
-          x.domain([
-            d3.min(data, function(d) { return d.date; }), 
-            d3.max(data, function(d) { return d.date; })
-          ]);
-         
-          yAxis = d3.svg.axis().scale(y).orient("left");
-          xAxis = d3.svg.axis().scale(x).orient("bottom").ticks(1);
+        }
+        data.push(stockData.shift());
+        var middle = data[data.length - 1].value;
 
-          //switch to new scale
-          svg.select(".y.axis")
-          .transition()
-          .duration(clockSpeed)
-          .ease("linear")
-          .call(yAxis);
+        context.model.setAdjClose(data[data.length - 1].adjClose);
+        
+        path
+        .attr("d",line)
+        .attr("transform", null);
+        
+        y.domain([middle - 500, middle + 500]);
+        x.domain([
+          d3.min(data, function(d) { return d.date; }), 
+          d3.max(data, function(d) { return d.date; })
+        ]);
+       
+        yAxis = d3.svg.axis().scale(y).orient("left");
+        xAxis = d3.svg.axis().scale(x).orient("bottom").ticks(1);
 
-          svg.select(".x.axis")
-          .transition()
-          .duration(clockSpeed)
-          .ease("linear")
-          .call(xAxis);
-            
-            // update the line
-          path
-          .transition()
-          .duration(clockSpeed)
-          .ease("linear")
-          .attr("d", line)
-          .attr("transform", "translate(0,0)")
-          .each('end', function(){
-            // pop the old data point off the front
-            
-            data.shift();
+        //switch to new scale
+        svg.select(".y.axis")
+        .transition()
+        .duration(clockSpeed)
+        .ease("linear")
+        .call(yAxis);
 
-            tick(data);
-            //updateY(data);
-          });   
-           
+        svg.select(".x.axis")
+        .transition()
+        .duration(clockSpeed)
+        .ease("linear")
+        .call(xAxis);
+          
+          // update the line
+        path
+        .transition()
+        .duration(clockSpeed)
+        .ease("linear")
+        .attr("d", line)
+        .attr("transform", "translate(0,0)")
+        .each('end', function(){
+          // pop the old data point off the front
+          
+          data.shift();
+          context.model.trigger('accrual');
+          tick(data);
+          //updateY(data);
+        });    
+
     };
 
-     tick();
+    tick();
 
-   },
+  },
 
 
   // controller
@@ -179,60 +184,47 @@ var GameStockView = Backbone.View.extend({
     'click #buy-button': 'handleBuy',
     'click #sell-button': 'handleSell'
   },
+  
+  magnitudeBuySell : 0.2,
 
   handleBuy: function(event) {
     // event.preventDefault();
+    console.log('trying to buy');
 
-    // var nShares = this.nShares;
-    // var adjClose = this.adjClose;
-    // var currentCash = this.model.get('cash');
+    var originalShares = this.model.getStartShares();
+    var nShares = this.model.getNShares();
 
-    // // debugger;
-    // var numSharesToBuy = Math.round(this.originalShares * this.magnitudeBuySell);
-    // var cost = numSharesToBuy * adjClose;
-    // console.log('num shares to buy', numSharesToBuy);
-    // // console.log('you tried to buy!');
+    this.model.setNShares(nShares + (originalShares * this.magnitudeBuySell));
 
-    // if (currentCash - cost < 0) {
-    //   console.error('ERROR: trying to spend more cash than you have');
-    //   return;
-    // }
-    // this.model.set('cash', currentCash-cost);
-    // this.nShares = this.nShares + numSharesToBuy;
-    // console.log('new number of shares', this.nShares);
+    console.log(this.model);
+
+    this.model.trigger('buy');
+
+    this.delegateEvents();
 
   },
 
   handleSell: function(event) {
     // event.preventDefault();
 
-    // var nShares = this.nShares;
-    // var adjClose = this.adjClose;
-    // var currentCash = this.model.get('cash');
+    var originalShares = this.model.getStartShares();
+    var nShares = this.model.getNShares();
 
-    // var numSharesToSell = Math.round(this.originalShares * this.magnitudeBuySell);
+    this.model.setNShares(nShares - (originalShares * this.magnitudeBuySell));
 
-    // var cost = numSharesToSell * adjClose;
+    this.model.trigger('sell');
 
-    // if (nShares - numSharesToSell < 0){
-    //   console.error("ERROR: trying to sell more shares than you own");
-    //   return;
-    // }
-    // console.log('num shares to sell', numSharesToSell);
-    // // console.log('you tried to buy!');
-
-  
-    // this.model.set('cash', currentCash+cost);
-    // this.nShares = this.nShares - numSharesToSell;
-    // console.log('new number of shares', this.nShares);
+    this.delegateEvents();
 
   },
 
   render: function() {
-    this.$el.empty(); 
-    //this.drawStockLine();
-    return this.$el.html(this.template(this.model.attributes));
-    // return this.$el;
+    console.log('rendering gameStockView');
+    this.$el.empty();
+    this.$el.append('<button id="buy-button" class="btn btn-default">Buy</button> \
+                    <button id="sell-button" class="btn btn-default">Sell</button>');
+    this.delegateEvents();
+    return this.$el;
   }
 
 });

@@ -64,6 +64,7 @@ var AppView = Backbone.View.extend({
   },
 
   render: function(){
+    console.log('rendering body');
     var context = this;
     // immediately makes a request to see if user is signed in
     $.ajax({

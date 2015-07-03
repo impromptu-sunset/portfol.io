@@ -14,46 +14,18 @@ var GameStocksView = Backbone.View.extend({
     });
   },
 
-  // drawStocks: function() {
-
-  //   this.collection.forEach(function(model){
-      
-  //   });
-
-  //   var tick = function() {
-
-  //     // push a new data point onto the back
-  //     data.push(stockData.shift());
-
-  //     // redraw the line, and slide it to the left
-  //     d3.selectAll('.line')
-  //         .attr("d", line)
-  //         .attr("transform", null)
-  //       .transition()
-  //         .duration(clockSpeed)
-  //         .ease("linear")
-  //         .attr("transform", "translate(" + x(-1) + ",0)")
-  //         .each('end', function(){
-  //           // pop the old data point off the front
-  //           data.shift();
-  //           tick();
-  //         });
-  //   };
-
-  //   tick();
-
-  // },
   reset_timeout: function(){
     clearTimeout(this.timeout);
     console.log("OVER!");
   },
+  
   render: function() {
+    console.log('inside gameStocksView render');
     this.$el.hide();
     this.$el.empty();
     if (this.collection.length > 0) {  
       this.$el.show();
       this.collection.forEach(function(model){
-        console.log("model is: ", model);
         var gameStockView = new GameStockView({model: model});
         this.$el.append(gameStockView.render());
         gameStockView.drawStockLine();

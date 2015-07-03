@@ -8,20 +8,19 @@ var StockModel = Backbone.Model.extend({
       this.set('history', response); // "history" is just an array of dates, stock prices, etc
       this.set('amount', parseFloat(this.get('amount')));
       this.set('potential', this.get('amount'));
-      var nShares = this.get('amount') / this.get('history')[0].adjClose;
+      this.set('nShares', this.get('amount') / this.get('history')[0].adjClose);
+      this.set('originalShares', this.get('amount') / this.get('history')[0].adjClose);
+      this.set('adjClose', this.get('history')[0].adjClose);
       var max = this.get('amount');
       _.each(this.get('history'), function(snapshot) {
-        snapshot.nShares = nShares; // keeps track of number of shares for each data point
-        this.saveMax(nShares, snapshot.adjClose);
+        snapshot.nShares = this.get('nShares'); // keeps track of number of shares for each data point
+        this.saveMax(this.get('nShares'), snapshot.adjClose);
       }.bind(this));
     } else {
       this.destroy(); // if there is no data, does not add to collection.
     }
   },
 
-  getData: function() {
-    return this.get('gameData');
-  },
 
   saveMax: function(shares, adjClose){
     var currentValue = shares * adjClose;
@@ -34,6 +33,7 @@ var StockModel = Backbone.Model.extend({
   /* given an index or date, returns the value of user's stock at that time
   * using the stock's closing value as the value for that day
   */
+
   getValue: function(indexOrDate) {
     var history = this.get('history');
     if (typeof indexOrDate === 'number') {
@@ -139,6 +139,34 @@ var StockModel = Backbone.Model.extend({
   },
 
 
+  // game functions
+  getGameValue: function() {
+    console.log("inside stocks model getGameValue");
+    console.log('current adjClose is: ', this.get('adjClose'));
+    console.log('current nShares is: ', this.get('nShares'));
+    return this.get('adjClose') * this.get('nShares');
+  },
+
+  getStartShares: function() {
+    console.log('number of starting shares is: ', this.get('originalShares'));
+    return this.get('originalShares');
+  },
+
+  getNShares: function() {
+    console.log('nShares is: ', this.get('nShares'));
+    return this.get('nShares');
+  },
+
+  setNShares: function(number) {
+    this.set('nShares', number);
+    console.log('set nShares to ', this.get('nShares'));
+  },
+
+  setAdjClose: function(number) {
+    this.set('adjClose', number);
+    // console.log('set adjClose to ', this.get('adjClose'));
+  },
+
   // returns the stock's history in d3-consumable format
   getTrajectory: function() {
     var context = this;
@@ -147,6 +175,7 @@ var StockModel = Backbone.Model.extend({
       values.date = new Date(snapshot.date);
       values.value = context.getValue(index);
       values.symbol = snapshot.symbol;
+      values.adjClose = snapshot.adjClose;
       return values;
     });
   },
