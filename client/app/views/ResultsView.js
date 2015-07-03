@@ -38,12 +38,13 @@ var ResultsView = Backbone.View.extend({
       type: "POST",
       contentType: "application/json",
       url: '/api/ebay',
-      data: JSON.stringify({ cost: earnedCash, status: 'earned' }),
+      data: JSON.stringify({ cost: earnedCash }),
       dataType: "json"
       })
       .done(function(data) {
         resultObj.ebay = data._ebay;
         resultObj.randomItem = data._randomItem;
+        resultObj.status = "earned";
         context.collection.add([resultObj]);
         $.ajax({
           type: "POST",
@@ -55,6 +56,8 @@ var ResultsView = Backbone.View.extend({
           .done(function(data) {
             resultObj.ebay = data._ebay;
             resultObj.randomItem = data._randomItem;
+            resultObj.status = "potential";
+
             context.collection.add([resultObj]);
           });
       });
