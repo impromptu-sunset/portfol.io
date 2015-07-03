@@ -10,7 +10,7 @@ var LifeEventsView = Backbone.View.extend({
     this.wallet = params.wallet;
     console.log("WALLET IS", this.wallet);
     this.wallet.on('change', function(){
-      console.log("wallet changed");
+      // console.log("wallet changed");
     });
   },
 
