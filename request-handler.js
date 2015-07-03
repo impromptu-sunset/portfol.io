@@ -2,6 +2,7 @@
 var yahooFinance = require('yahoo-finance');
 
 var getStocks = function(req,res) {
+  console.log('TRYING TO GET STOCK', req.body);
   // use npm yahooFinance library function to instantiate stock request
   yahooFinance.historical({
     symbol: req.body.symbol,

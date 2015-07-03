@@ -24,12 +24,14 @@ var AppView = Backbone.View.extend({
                         <div class="username-verification text-right"></div>'),
 
   initialize: function(){
-    this.formView = new FormView({collection: this.collection});
+    // this.formView = new FormView({collection: this.collection});
     this.dashboardView = new DashboardView({collection: this.collection, life_events: this.model.get('life_events')});
+    this.renderNavbar();
+    this.renderDashboard();
     //this.lifeEventsView = new LifeEventsView({collection: this.model.get('life_events')});
-    this.aboutusView = new AboutUsView();
-    this.signupView = new SignupView({model: this.model});
-    this.signinView = new SigninView({model: this.model});
+    // this.aboutusView = new AboutUsView();
+    // this.signupView = new SignupView({model: this.model});
+    // this.signinView = new SigninView({model: this.model});
     //this.render();
     window.location.hash = 'front';
   },
@@ -57,8 +59,16 @@ var AppView = Backbone.View.extend({
     ]);
   },
 
+  renderNavbar: function(){
+    var navbar = $(this.navDiv);
+    this.$el.append(navbar);
+  },
+
+  renderDashboard: function() {
+    this.$el.append(this.dashboardView.$el);
+  },
+
   render: function(){
-    console.log('rendering body');
     var context = this;
     // immediately makes a request to see if user is signed in
     $.ajax({
@@ -66,25 +76,25 @@ var AppView = Backbone.View.extend({
       success: function (response) {
         context.model.set('signedin', true);
         context.setUsername(response);
-        context.renderBody(context.formView);
+        // context.renderBody(context.formView);
        },
       error: function() {
-        context.renderBody(context.formView);
+        // context.renderBody(context.formView);
       }
     });
   },
 
-  signup: function() {
-    this.renderBody(this.signupView, false);
-  },
+  // signup: function() {
+  //   this.renderBody(this.signupView, false);
+  // },
 
-  signin: function() {
-    this.renderBody(this.signinView, false);
-  },
+  // signin: function() {
+  //   this.renderBody(this.signinView, false);
+  // },
 
-  aboutus: function() {
-    this.renderBody(this.aboutusView, false);
-  },
+  // aboutus: function() {
+  //   this.renderBody(this.aboutusView, false);
+  // },
 
   portfolios: function () {
     this.$el.empty();

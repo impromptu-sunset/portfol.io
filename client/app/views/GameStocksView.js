@@ -7,7 +7,7 @@ var GameStocksView = Backbone.View.extend({
 
   initialize: function() {
     // this.collection.on('sync', this.render, this);
-    this.listenTo(this.collection, 'sync', this.render);
+    this.listenTo(this.collection, 'sync add', this.render);
     this.collection.on('game_over', this.reset_timeout, this);
     var context = this;
     $(window).on("resize", function() {

@@ -18,7 +18,7 @@ var DashboardView = Backbone.View.extend({
     this.render();
 
     this.listenTo(this.collection, 'game_over', function(){
-      this.renderPotentialValue();
+      // this.renderPotentialValue();
       console.log('GAME HAS ENDED');
       this.renderResults();
     }, this);
@@ -33,6 +33,8 @@ var DashboardView = Backbone.View.extend({
       this.gameStocksView.remove();
       this.remove();
     });
+
+    this.generateStocks();
 
     // buy stock, subtract money from wallet
     this.listenTo(this.collection, 'buy', function (stock) {
@@ -74,7 +76,7 @@ var DashboardView = Backbone.View.extend({
     
     // show value of investment
     this.listenTo(this.collection, 'accrual', function (model) {
-      console.log('inside dashboardView accrual listener');
+      // console.log('inside dashboardView accrual listener');
       var total = this.collection.getValue();
       this.walletView.model.investmentValue(total);
     }, this);
@@ -139,6 +141,101 @@ var DashboardView = Backbone.View.extend({
     this.walletView.remove();
     this.lifeEventsView.remove();
     this.$el.append(this.resultsView.render());
+  },
+
+  generateStocks: function() {
+    var sampleStockDataA = {};
+    var sampleStockA;
+    var stock;
+    var context = this;
+
+    sampleStockDataA = {
+      symbol: 'AIG',
+      from: '2000-01-01', //FORMAT: 'YYYY-MM-DD',
+      to: '2015-07-3',     //FORMAT: 'YYYY-MM-DD', Currently unnecessary because we always retrieve to the latest date
+      amount: 1,
+      period: 'd'          // 'd' (daily), 'w' (weekly), 'm' (monthly), 'v' (dividends only) 
+    };
+
+    sampleStockDataB = {
+      symbol: 'APC',
+      from: '2000-01-01', //FORMAT: 'YYYY-MM-DD',
+      to: '2015-07-3',     //FORMAT: 'YYYY-MM-DD', Currently unnecessary because we always retrieve to the latest date
+      amount: 1,
+      period: 'd'          // 'd' (daily), 'w' (weekly), 'm' (monthly), 'v' (dividends only) 
+    };
+
+    sampleStockDataC = {
+      symbol: 'OMX',
+      from: '2000-01-01', //FORMAT: 'YYYY-MM-DD',
+      to: '2015-07-3',     //FORMAT: 'YYYY-MM-DD', Currently unnecessary because we always retrieve to the latest date
+      amount: 1,
+      period: 'd'          // 'd' (daily), 'w' (weekly), 'm' (monthly), 'v' (dividends only) 
+    };
+
+    // sampleStockA = new StockModel();
+    // sampleStockB = new StockModel();
+
+
+    console.log('about to fetch');
+
+    // this.collection.create(sampleStockDataA);
+
+    $.ajax({
+      type: "POST",
+      contentType: "application/json",
+      url: '/api/stocks',
+      data: JSON.stringify(sampleStockDataA),
+      dataType: "json"
+      })
+      .done(function(data) {
+        // store the results data
+        console.log('STOCK DATA IN AJAX IS', data);
+        sampleStockA = new StockModel();
+        sampleStockA.parse(data);
+        context.collection.add(sampleStockA);
+
+      });
+
+      $.ajax({
+        type: "POST",
+        contentType: "application/json",
+        url: '/api/stocks',
+        data: JSON.stringify(sampleStockDataB),
+        dataType: "json"
+        })
+        .done(function(data) {
+          sampleStockB = new StockModel();
+          sampleStockB.parse(data);
+          context.collection.add(sampleStockB);
+
+        });
+
+        $.ajax({
+          type: "POST",
+          contentType: "application/json",
+          url: '/api/stocks',
+          data: JSON.stringify(sampleStockDataC),
+          dataType: "json"
+          })
+          .done(function(data) {
+            sampleStockC = new StockModel();
+            sampleStockC.parse(data);
+            context.collection.add(sampleStockC);
+
+          });
+
+    // sampleStockA.fetch({data: sampleStockDataA, type: 'POST'}).done(function() {
+    //   console.log('adding the new stock to the collection');
+    //   context.collection.create([sampleStockA]);
+    // });
+
+    //  sampleStockB.fetch({data: sampleStockDataA, type: 'POST'}).done(function() {
+    //   console.log('adding the new stock to the collection');
+    //   context.collection.create([sampleStockA]);
+    // });
+
+    // sampleStockA = this.collection.model.fetch({data: sampleStockDataA, type: 'POST'});
   }
 
 });
