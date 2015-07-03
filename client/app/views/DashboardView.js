@@ -52,14 +52,19 @@ var DashboardView = Backbone.View.extend({
 
   // simplified version your max possible Return on Invesvent
   renderPotentialValue: function(){
-    
+    // don't need this anymore.
     var total_potential = this.collection.reduce(function(memo, num){
       console.log("memo", memo);
       console.log("num", num);
-      memo += num.get('potential');
+      return memo + Number(num.get('potential'));
     },0, this);
 
+    console.log("total potential ", total_potential);
+
     var life_events_total = this.lifeEvents.total_life_events;
+
+    console.log("total life ", life_events_total);
+
     var potential = total_potential + life_events_total;
     this.$('#potential').remove();
     this.$el.append('<div id="potential">Potential Value '+ potential+'</div>');

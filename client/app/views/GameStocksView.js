@@ -21,6 +21,7 @@ var GameStocksView = Backbone.View.extend({
   },
 
   render: function() {
+    // stop listening.
     this.$el.hide();
     this.$el.empty();
     if (this.collection.length > 0) {  

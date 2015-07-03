@@ -8,6 +8,7 @@ var StockModel = Backbone.Model.extend({
       this.set('history', response); // "history" is just an array of dates, stock prices, etc
       this.set('amount', parseFloat(this.get('amount')));
       this.set('potential', 0);
+      //this.set('max', this.get('history')[0].adjClose);
       //this.set('nShares', this.get('amount') / this.get('history')[0].adjClose);
       this.set('nShares', 0);
       // this.set('originalShares', 100);
@@ -25,10 +26,12 @@ var StockModel = Backbone.Model.extend({
 
 
   saveMax: function(shares, adjClose){
+    
     var currentValue = shares * adjClose;
     if(currentValue > this.get('potential')){
-      this.set('potential', currentValue);
+      this.set('potential', shares*adjClose);
     }
+
   },
 
 
@@ -146,6 +149,7 @@ var StockModel = Backbone.Model.extend({
     // console.log("inside stocks model getGameValue");
     // console.log('current adjClose is: ', this.get('adjClose'));
     // console.log('current nShares is: ', this.get('nShares'));
+    this.saveMax(this.get('nShares'), this.get('adjClose'));
     return this.get('adjClose') * this.get('nShares');
   },
 
