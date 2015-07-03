@@ -131,6 +131,11 @@ app.post('/stocks', function(req, res) {
   });
 });
 
+app.post('/api/ebay', function(req, res) {
+  console.log(req.body);
+  ebay.getEbayProduct(req, res);
+});
+
 app.use('/api/stocks', handler.getStocks);
 
 app.use('/api/ebay', ebay.getEbayProduct);

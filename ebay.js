@@ -1,4 +1,5 @@
 var request = require('request');
+var itemGetter = require('./randomitem.js');
 
 // stores product categories
 // find new product category IDs at: http://www.isoldwhat.com/getcats/
@@ -137,8 +138,8 @@ var getEbayProduct = function(req, res) {
   }
 
   request(requestUrl, function(error, ebayRes, ebayData) {
-    var results;
-    var result;
+    var results = {};
+    var result = {};
     var randomIndex;
 
     // stringify the ebay result JSON
@@ -148,9 +149,15 @@ var getEbayProduct = function(req, res) {
     // generate a random index for the 
     randomIndex = getRandomInt(0, results.length);
     // store the random result
-    result = results[randomIndex];
+    result._ebay = results[randomIndex];
+
+    // get a random item as well
+    result._randomItem = itemGetter.getRandomItem(cost);
+
+    console.log(result._randomItem);
     // send a JSON version of the random result
-    res.json(result);
+    res.status(200).send(result);
+    // res.send(result);
   });
 };
 

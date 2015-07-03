@@ -25,8 +25,8 @@ var ResultsView = Backbone.View.extend({
       dataType: "json"
       })
       .done(function(data) {
-        this.model.set('ebayResult', data.ebayResult);
-        this.model.set('randomResult', data.)
+        this.model.set('ebayResult', data._ebay);
+        this.model.set('randomResult', data._randomItem)
       });
   }
 });
