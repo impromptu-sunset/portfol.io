@@ -11,12 +11,14 @@ var WalletView = Backbone.View.extend({
 
   initialize: function() {
     this.model.on('change', this.render, this);
-    this.render();
+    //this.render();
     // DEBUG VALUES BEFORE HOOKING UP WITH REAL STOCKS
     this.originalShares = 200;
     this.nShares = 200;
     this.adjClose = 5;
     this.magnitudeBuySell = 0.2;
+    
+    this.render();
   },
 
   events: {
@@ -25,13 +27,13 @@ var WalletView = Backbone.View.extend({
   },
 
   render: function (){
-    this.$el.html(this.template(this.model.attributes));
-
+    this.$el.empty();
+    this.$el.append(this.template(this.model.attributes));
+    this.delegateEvents();
   },
 
   handleBuy: function(event) {
     event.preventDefault();
-
     var nShares = this.nShares;
     var adjClose = this.adjClose;
     var currentCash = this.model.get('cash');
@@ -53,7 +55,7 @@ var WalletView = Backbone.View.extend({
   },
 
   handleSell: function(event) {
-      event.preventDefault();
+    event.preventDefault();
 
     var nShares = this.nShares;
     var adjClose = this.adjClose;

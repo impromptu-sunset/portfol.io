@@ -15,7 +15,7 @@ var User = require('./db/models/user');
 var Stocks = require('./db/collections/stocks');
 var Stock = require('./db/models/stock');
 var Portfolio = require('./db/models/portfolio');
-
+var life_events=require('./data/life_events.json');
 
 
 
@@ -64,6 +64,10 @@ app.use(passport.session());
 app.get('/signout', function(req, res){
   req.session.destroy();
   res.send(202);
+});
+
+app.get('/data/life_events', function(req, res){
+    res.json(life_events);
 });
 
 app.post('/signin',
