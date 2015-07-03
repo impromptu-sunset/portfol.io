@@ -121,7 +121,7 @@ var GameStockView = Backbone.View.extend({
           console.log("LAST ITEM ", data[data.length - 1]);
 
           //this was changed on merge!!!!!!
-          context.trigger("game_over");
+          context.model.trigger("game_over");
           return;
         }
         data.push(stockData.shift());

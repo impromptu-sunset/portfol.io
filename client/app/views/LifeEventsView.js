@@ -25,7 +25,7 @@ var LifeEventsView = Backbone.View.extend({
     var current_event = this.collection.pick_event();
     this.$el.empty();
     this.$el.append([
-      new LifeEventView({model: current_event, wallet_amount: this.wallet.get('cash')}).render()
+      new LifeEventView({model: current_event, wallet: this.wallet}).render()
     ]);
   }
 
