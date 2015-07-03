@@ -227,7 +227,7 @@ var GameStockView = Backbone.View.extend({
 
     var numSold = nShares - (originalShares * this.magnitudeBuySell);
 
-    if (shareChange > 0) {
+    if (numSold > 0) {
       this.model.setNShares(numSold);
     } else {
       this.model.setNShares(0);
