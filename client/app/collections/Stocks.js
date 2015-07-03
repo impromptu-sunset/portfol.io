@@ -135,7 +135,7 @@ var Stocks = Backbone.Collection.extend({
       val += stock.getGameValue();
     });
     this.value = val;
-    console.log(this.value);
+    // console.log(this.value);
     return this.value;
   }
 
