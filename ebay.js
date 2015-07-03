@@ -124,7 +124,7 @@ var getEbayProduct = function(req, res) {
           '&SECURITY-APPNAME=Jonathan-3653-441d-a058-edbde13c5f5c' +
           '&RESPONSE-DATA-FORMAT=JSON' +
           '&REST-PAYLOAD' +
-          '&paginationInput.entriesPerPage=3' + // changes the number of results that the API returns
+          '&paginationInput.entriesPerPage=10' + // changes the number of results that the API returns
           '&categoryId=' + categoryId +
           '&sortOrder=CurrentPriceHighest' +
           '&itemFilter(0).name=MaxPrice' + // return the most expensive items that we can afford

@@ -26,7 +26,7 @@ var ResultsView = Backbone.View.extend({
     );
   },
 
-  className: 'results-box',
+  className: 'results-box col-xs-12',
 
   getPurchaseResult: function() {
     var context = this;
@@ -38,18 +38,27 @@ var ResultsView = Backbone.View.extend({
       type: "POST",
       contentType: "application/json",
       url: '/api/ebay',
-      data: JSON.stringify({ cost: earnedCash }),
+      data: JSON.stringify({ cost: earnedCash, status: 'earned' }),
       dataType: "json"
       })
       .done(function(data) {
         resultObj.ebay = data._ebay;
         resultObj.randomItem = data._randomItem;
         context.collection.add([resultObj]);
-
-
-        // context.model.set('ebayResult', data._ebay);
-        // context.model.set('randomResult', data._randomItem);
-        // console.log('model attributes', context.model.attributes);
+        $.ajax({
+          type: "POST",
+          contentType: "application/json",
+          url: '/api/ebay',
+          data: JSON.stringify({ cost: potentialCash, status: 'potential' }),
+          dataType: "json"
+          })
+          .done(function(data) {
+            resultObj.ebay = data._ebay;
+            resultObj.randomItem = data._randomItem;
+            context.collection.add([resultObj]);
+          });
       });
+
+  
   }
 });
