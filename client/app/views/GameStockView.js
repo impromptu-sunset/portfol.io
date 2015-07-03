@@ -35,6 +35,7 @@ var GameStockView = Backbone.View.extend({
   },
   drawStockLine: function() {
 
+    var model = this;
     // time to each new data point, in ms
     var clockSpeed = 300;
 
@@ -114,6 +115,7 @@ var GameStockView = Backbone.View.extend({
          //update domain
          if(stockData.length===0){
           console.log("LAST ITEM ", data[data.length - 1]);
+          model.trigger("game_over");
           return;
          }
           data.push(stockData.shift());

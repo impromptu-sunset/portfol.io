@@ -7,6 +7,7 @@ var GameStocksView = Backbone.View.extend({
 
   initialize: function() {
     this.collection.on('sync edited remove reset', this.render, this);
+    this.collection.on('game_over', this.reset_timeout, this);
     var context = this;
     $(window).on("resize", function() {
       context.render.apply(context);
@@ -42,7 +43,10 @@ var GameStocksView = Backbone.View.extend({
   //   tick();
 
   // },
-
+  reset_timeout: function(){
+    clearTimeout(this.timeout);
+    console.log("OVER!");
+  },
   render: function() {
     this.$el.hide();
     this.$el.empty();
@@ -55,8 +59,20 @@ var GameStocksView = Backbone.View.extend({
         gameStockView.drawStockLine();
       }, this);
       // this.drawStocks(this);
+      clearTimeout(this.timeout);
+      this.setup_timer();
       return this.$el;
     }
+  },
+
+  setup_timer :function(){
+    // random number from 1 second to 10 seconds.
+    var random = Math.floor(Math.random() * 10000) + 1000; 
+    this.timeout = setTimeout(function(){
+      this.collection.trigger('life_event');
+      console.log(random);
+      this.setup_timer();
+    }.bind(this), random)
   }
 
 });

@@ -3,13 +3,20 @@ var DashboardView = Backbone.View.extend({
 
   className: 'dashboard container-fluid',
 
-  initialize: function(){
+  initialize: function(params){
     // this.graphView = new GraphView({collection: this.collection});
     this.gameStocksView = new GameStocksView({collection: this.collection});
     // this.infoView = new InfoView({collection: this.collection});
-    // this.walletView = new WalletView({model: new WalletModel()});
-    this.collection.on('add reset', function() {
-      this.render();
+    var wallet = new WalletModel();
+    this.walletView = new WalletView({model: wallet});
+    this.lifeEventsView = new LifeEventsView({collection: params.life_events, wallet: wallet});
+    // this.collection.on('add reset', function() {
+    //   this.render();
+    // }, this);
+    this.render();
+
+    this.collection.on('life_event', function(){
+      this.lifeEventsView.addLifeEvent();
     }, this);
     // this.renderWallet();
   },
@@ -33,7 +40,8 @@ var DashboardView = Backbone.View.extend({
       // '<div id="wallet-box">hello from the render dashboard view</div>',
       // after we create the wallet-box div, then we can render the wallet view
       // which references the $el value and manages its own updating
-      // this.walletView.$el,
+      this.walletView.$el,
+      this.lifeEventsView.$el
     ]);
   },
 

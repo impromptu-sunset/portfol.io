@@ -31,12 +31,12 @@ var AppView = Backbone.View.extend({
 
   initialize: function(){
     this.formView = new FormView({collection: this.collection});
-    this.dashboardView = new DashboardView({collection: this.collection});
-    
+    this.dashboardView = new DashboardView({collection: this.collection, life_events: this.model.get('life_events')});
+    //this.lifeEventsView = new LifeEventsView({collection: this.model.get('life_events')});
     this.aboutusView = new AboutUsView();
     this.signupView = new SignupView({model: this.model});
     this.signinView = new SigninView({model: this.model});
-    this.render();
+    //this.render();
     window.location.hash = 'front';
   },
 
@@ -48,8 +48,8 @@ var AppView = Backbone.View.extend({
   renderBody: function(view, renderDashboard) {
     this.$el.empty();
     view.delegateEvents();
-    this.formView.delegateEvents();
-    this.dashboardView.delegateEvents();
+    // this.formView.delegateEvents();
+    // this.dashboardView.delegateEvents();
     // this.dashboardView.infoView.delegateEvents();
     var navbar = $(this.navDiv);
     if (this.model.get('signedin')) {
@@ -58,7 +58,8 @@ var AppView = Backbone.View.extend({
     this.$el.append([
       navbar,
       view.$el,
-      this.dashboardView.$el
+      this.dashboardView.$el,
+      // this.lifeEventsView.$el
     ]);
   },
 

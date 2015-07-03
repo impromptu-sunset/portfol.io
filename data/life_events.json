@@ -1,0 +1,23 @@
+[
+  {
+    "event": "had a baby",
+    "amount": -5000,
+    "probability": 20
+  },
+  {
+    "event": "You won (scratch-off) lottery",
+    "amount": 20,
+    "probability": 40
+  },
+  {
+    "event": "You won the lottery!",
+    "amount": 1000000,
+    "probability": 5
+  },
+  {
+    "event": "You donated half your money to charity. Way to go!",
+    "amount": 0,
+    "percent": 50,
+    "probability": 5
+  }
+]
