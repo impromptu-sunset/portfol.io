@@ -7,9 +7,7 @@ var AppView = Backbone.View.extend({
              <div class="container-fluid"> \
                <a href="#front" class="navbar-brand">Portfol.io</a> \
                <ul class="nav nav-pills navbar-nav navbar-right"> \
-                 <li><a href="#signup">Sign Up</a></li> \
-                 <li><a href="#signin">Sign In</a></li> \
-                 <li><a href="#about">About Us</a></li> \
+                 <li><a href="https://github.com/impromptu-sunset/sandworm-hr">Github</a></li> \
                </ul> \
              </div> \
           </nav> \
@@ -20,10 +18,6 @@ var AppView = Backbone.View.extend({
                             <a href="#front" class="navbar-brand">Portfol.io</a> \
                             <ul class="nav nav-pills navbar-nav navbar-right"> \
                               <li class="username-container">Signed in as <strong class="username"><%= username %></strong></li>\
-                              <li><a href="#signout">Sign Out</a></li>\
-                              <li><a href="#portfolios">My Portfolios</a></li> \
-                              <li><a href="#new">New Portfolio</a></li> \
-                              <li><a href="#about">About Us</a></li> \
                             </ul> \
                           </div> \
                         </nav> \
