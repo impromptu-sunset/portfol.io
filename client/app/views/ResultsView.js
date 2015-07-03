@@ -1,6 +1,6 @@
 var ResultsView = Backbone.View.extend({
   initialize: function() {
-    this.render();
+    // this.render();
 
     this.collection.on('add', function() {
       this.render();
@@ -24,6 +24,7 @@ var ResultsView = Backbone.View.extend({
     var context = this;
     var earnedCash = earned || 17;
     var potentialCash = potential || 33772;
+    var resultObj = {};
 
     // make an ajax call with the earned cash
     $.ajax({

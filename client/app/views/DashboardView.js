@@ -19,7 +19,9 @@ var DashboardView = Backbone.View.extend({
 
     this.listenTo(this.collection, 'game_over', function(){
       this.renderPotentialValue();
-    });
+      console.log('GAME HAS ENDED');
+      this.renderResults();
+    }, this);
 
     this.listenTo(this.collection, 'life_event', function(){
       this.lifeEventsView.addLifeEvent();
@@ -116,12 +118,12 @@ var DashboardView = Backbone.View.extend({
       // re-renders. We want the cash value to re-render everytime the cash value
       // increases or decreases, so it is necessary to create a DOM element
       // for the wallet view to reference when it is re-rendering its value.
-      '<div id="wallet-box">Wallet Box!</div>',
+      // '<div id="wallet-box">Wallet Box!</div>',
       // after we create the wallet-box div, then we can render the wallet view
       // which references the $el value and manages its own updating
       this.walletView.$el,
       this.lifeEventsView.$el,
-      this.resultsView.$el
+      // this.resultsView.$el
     ]);
     // this.delegateEvents();
     // this.bindListeners();
@@ -130,6 +132,13 @@ var DashboardView = Backbone.View.extend({
 
   renderWallet: function() {
     this.walletView.render();
+  },
+
+  renderResults: function() {
+    this.gameStocksView.remove();
+    this.walletView.remove();
+    this.lifeEventsView.remove();
+    this.$el.append(this.resultsView.render());
   }
 
 });
