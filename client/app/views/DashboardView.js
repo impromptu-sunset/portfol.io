@@ -139,6 +139,20 @@ var DashboardView = Backbone.View.extend({
     this.walletView.remove();
     this.lifeEventsView.remove();
     this.$el.append(this.resultsView.render());
+  },
+
+  generateStocks: function() {
+    var sampleStockDataA = {};
+    var sampleStockA;
+
+    sampleStockA = {
+      symbol: 'AAPL',
+      from: '2000-01-01', //FORMAT: 'YYYY-MM-DD',
+      to: '2015-07-3',     //FORMAT: 'YYYY-MM-DD', Currently unnecessary because we always retrieve to the latest date
+      period: 'd'          // 'd' (daily), 'w' (weekly), 'm' (monthly), 'v' (dividends only) 
+    };
+
+    sampleStockA = this.collection.model.fetch({data: sampleStockA, type: 'POST'});
   }
 
 });
