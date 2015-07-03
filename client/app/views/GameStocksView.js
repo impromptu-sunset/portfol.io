@@ -6,9 +6,7 @@ var GameStocksView = Backbone.View.extend({
   className: 'graphs col-xs-12 col-md-12',
 
   initialize: function() {
-    // this.collection.on('sync edited remove reset', this.render, this);
     this.collection.on('sync', this.render, this);
-
     this.collection.on('game_over', this.reset_timeout, this);
     var context = this;
     $(window).on("resize", function() {
@@ -22,7 +20,6 @@ var GameStocksView = Backbone.View.extend({
   },
 
   render: function() {
-    console.log('inside gameStocksView render');
     this.$el.hide();
     this.$el.empty();
     if (this.collection.length > 0) {  
@@ -32,7 +29,7 @@ var GameStocksView = Backbone.View.extend({
         this.$el.append(gameStockView.render());
         gameStockView.drawStockLine();
       }, this);
-      // this.drawStocks(this);
+
       clearTimeout(this.timeout);
       this.setup_timer();
       return this.$el;
@@ -44,7 +41,7 @@ var GameStocksView = Backbone.View.extend({
     var random = Math.floor(Math.random() * 10000) + 1000; 
     this.timeout = setTimeout(function(){
       this.collection.trigger('life_event');
-      console.log(random);
+      // console.log(random);
       this.setup_timer();
     }.bind(this), random);
   }

@@ -188,24 +188,24 @@ var GameStockView = Backbone.View.extend({
   magnitudeBuySell : 0.2,
 
   handleBuy: function(event) {
-    // event.preventDefault();
-    console.log('trying to buy');
+    event.preventDefault();
+    // console.log('trying to buy');
 
     var originalShares = this.model.getStartShares();
     var nShares = this.model.getNShares();
 
     this.model.setNShares(nShares + (originalShares * this.magnitudeBuySell));
 
-    console.log(this.model);
+    // console.log(this.model);
 
     this.model.trigger('buy');
 
-    this.delegateEvents();
+    // this.delegateEvents();
 
   },
 
   handleSell: function(event) {
-    // event.preventDefault();
+    event.preventDefault();
 
     var originalShares = this.model.getStartShares();
     var nShares = this.model.getNShares();
@@ -214,7 +214,7 @@ var GameStockView = Backbone.View.extend({
 
     this.model.trigger('sell');
 
-    this.delegateEvents();
+    // this.delegateEvents();
 
   },
 

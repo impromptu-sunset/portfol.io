@@ -20,31 +20,24 @@ var DashboardView = Backbone.View.extend({
       this.lifeEventsView.addLifeEvent();
     }, this);
 
-    this.bindListeners();
-   
-  },
-
-  bindListeners: function() {
-
     // add or subtract money from wallet
     this.collection.on('buy sell', function() {
-      console.log('inside dashboardView buy/sell listener');
+      // console.log('inside dashboardView buy/sell listener');
       var cost = this.collection.getValueDiff();
-      // if (cost > 0){
-      //   this.wallet.accrue(cost);
-      // } else {
-      //   this.wallet.spend(cost);
-      // }
-      this.bindListeners();
+      if (cost > 0){
+        this.walletView.model.accrue(cost);
+      } else {
+        this.walletView.model.spend(cost);
+      }
     }, this);
-
+    
     // show value of investment
     // this.collection.on('accrual', function() {
     //   console.log('inside dashboardView accrual listener');
     //   var investments = this.collection.getValue();
     //   wallet.set('investment', investments);
     // }, this);
-
+   
   },
 
   setUsername: function(name) {
@@ -52,7 +45,6 @@ var DashboardView = Backbone.View.extend({
   },
 
   render: function(){
-    console.log('rendering dashboard');
 
     return this.$el.html([
       this.gameStocksView.$el,

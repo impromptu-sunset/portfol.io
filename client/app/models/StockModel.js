@@ -141,25 +141,25 @@ var StockModel = Backbone.Model.extend({
 
   // game functions
   getGameValue: function() {
-    console.log("inside stocks model getGameValue");
-    console.log('current adjClose is: ', this.get('adjClose'));
-    console.log('current nShares is: ', this.get('nShares'));
+    // console.log("inside stocks model getGameValue");
+    // console.log('current adjClose is: ', this.get('adjClose'));
+    // console.log('current nShares is: ', this.get('nShares'));
     return this.get('adjClose') * this.get('nShares');
   },
 
   getStartShares: function() {
-    console.log('number of starting shares is: ', this.get('originalShares'));
+    // console.log('number of starting shares is: ', this.get('originalShares'));
     return this.get('originalShares');
   },
 
   getNShares: function() {
-    console.log('nShares is: ', this.get('nShares'));
+    // console.log('nShares is: ', this.get('nShares'));
     return this.get('nShares');
   },
 
   setNShares: function(number) {
     this.set('nShares', number);
-    console.log('set nShares to ', this.get('nShares'));
+    // console.log('set nShares to ', this.get('nShares'));
   },
 
   setAdjClose: function(number) {
