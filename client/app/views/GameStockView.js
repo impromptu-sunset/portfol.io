@@ -219,7 +219,7 @@ var GameStockView = Backbone.View.extend({
     this.model.trigger('buy');
 
     // this.delegateEvents();
-
+ 
   },
 
   handleSell: function(event) {
