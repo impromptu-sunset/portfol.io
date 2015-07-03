@@ -123,7 +123,7 @@ var DashboardView = Backbone.View.extend({
       // which references the $el value and manages its own updating
       this.walletView.$el,
       this.lifeEventsView.$el,
-      this.resultsView.$el
+      // this.resultsView.$el
     ]);
     // this.delegateEvents();
     // this.bindListeners();
@@ -135,7 +135,8 @@ var DashboardView = Backbone.View.extend({
   },
 
   renderResults: function() {
-    this.resultsView.render();
+    this.wallet.remove();
+    this.$el.append(this.resultsView.render());
   }
 
 });
