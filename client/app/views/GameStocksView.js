@@ -6,11 +6,12 @@ var GameStocksView = Backbone.View.extend({
   className: 'graphs col-xs-12 col-md-12',
 
   initialize: function() {
-    this.collection.on('sync', this.render, this);
+    // this.collection.on('sync', this.render, this);
+    this.listenTo(this.collection, 'sync', this.render);
     this.collection.on('game_over', this.reset_timeout, this);
     var context = this;
     $(window).on("resize", function() {
-      context.render.apply(context);
+      context.collection.trigger('resize');
     });
   },
 
@@ -28,6 +29,7 @@ var GameStocksView = Backbone.View.extend({
       this.$el.show();
       this.collection.forEach(function(model){
         var gameStockView = new GameStockView({model: model});
+        gameStockView.listenTo(this, 'resize', gameStockView.remove)
         this.$el.append(gameStockView.render());
         gameStockView.drawStockLine();
       }, this);

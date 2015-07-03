@@ -10,7 +10,7 @@ var WalletView = Backbone.View.extend({
                         '),
 
   initialize: function() {
-    this.model.on('buy sell accrue', this.render, this);
+    this.listenTo(this.model, 'buy sell accrue', this.render);
     this.render();
   },
 

@@ -13,7 +13,8 @@ var GameStockView = Backbone.View.extend({
     // this.model.on('remove reset', this.render, this);
     var context = this;
     $(window).on("resize", function() {
-      context.render.apply(context);
+      context.trigger('resize');
+      // context.render.apply(context);
     });
     // this.render();
   },
@@ -211,15 +212,8 @@ var GameStockView = Backbone.View.extend({
     event.preventDefault();
     // console.log('trying to buy');
 
-    var originalShares = this.model.getStartShares();
-    var nShares = this.model.getNShares();
+    this.model.trigger('buy', this.model); 
 
-    this.model.setNShares(nShares + (originalShares * this.magnitudeBuySell));
-
-    this.model.trigger('buy');
-
-    // this.delegateEvents();
- 
   },
 
   handleSell: function(event) {
@@ -238,13 +232,11 @@ var GameStockView = Backbone.View.extend({
 
     this.model.trigger('sell');
 
-    // this.delegateEvents();
-
   },
 
   render: function() {
     console.log('rendering gameStockView');
-    // this.$el.empty();
+    this.$el.empty();
     return this.$el.html(this.template(this.model.attribtes));
     // '<button id="buy-button" class="btn btn-default">Buy</button> \
     //                 <button id="sell-button" class="btn btn-default">Sell</button>');

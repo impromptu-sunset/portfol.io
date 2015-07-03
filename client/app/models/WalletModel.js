@@ -7,21 +7,19 @@ var WalletModel = Backbone.Model.extend({
   },
 
   initialize: function() {
+    console.log('wallet created');
     setInterval(this.accrual.bind(this), 300);
   },
 
   buy: function(moolah) {
-    // console.log('inside wallet model accrue');
-    // console.log('amount to add is: ', money);
     var dough = this.get('cash');
     this.set('cash', dough + moolah);
     this.trigger('buy');
   },
 
   spend: function(moolah) {
-    // console.log('inside wallet model spend');
     var cheddar = this.get('cash');
-    this.set('cash', cheddar + moolah);
+    this.set('cash', cheddar - moolah);
     this.trigger('spend');
   },
 
@@ -32,6 +30,10 @@ var WalletModel = Backbone.Model.extend({
 
   accrual: function() {
     this.trigger('accrue');
+  },
+
+  getCash: function() {
+    return this.get('cash');
   }
 
 });
