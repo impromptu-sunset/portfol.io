@@ -1,23 +1,27 @@
 [
   {
     "event": "had a baby",
-    "amount": -5000,
-    "probability": 20
+    "amount": 5000,
+    "probability": 20,
+    "by": "neg"
   },
   {
     "event": "You won (scratch-off) lottery",
     "amount": 20,
-    "probability": 40
+    "probability": 40,
+    "by": "pos"
   },
   {
     "event": "You won the lottery!",
     "amount": 1000000,
-    "probability": 5
+    "probability": 5,
+    "by": "pos"
   },
   {
     "event": "You donated half your money to charity. Way to go!",
     "amount": 0,
     "percent": 50,
-    "probability": 5
+    "probability": 5,
+    "by": "neg"
   }
 ]
