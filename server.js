@@ -2,12 +2,12 @@ var express = require('express');
 var morgan = require('morgan');
 var bodyParser = require('body-parser');
 var handler = require('./request-handler.js');
-var zillow = require('./zillow.js');
 var session = require('express-session');
 var bcrypt = require('bcrypt-nodejs');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var ebay = require('./ebay.js');
+
 
 var db = require('./db/config');
 var Users = require('./db/collections/users');

@@ -5,13 +5,16 @@ var GameStockView = Backbone.View.extend({
 
   className: 'graph col-xs-4 col-md-4',
 
+  template: _.template('<button id="buy-button" class="btn btn-default">Buy</button> \
+                        <button id="sell-button" class="btn btn-default">Sell</button>'),
+
   initialize: function() {
-    this.model.on('sync edited remove reset', this.render, this);
+    // this.model.on('remove reset', this.render, this);
     var context = this;
     $(window).on("resize", function() {
       context.render.apply(context);
     });
-    //this.render();
+    // this.render();
   },
 
   // creates an array of data (of length sampleSize)
@@ -33,9 +36,11 @@ var GameStockView = Backbone.View.extend({
       return result;
     }
   },
+
   drawStockLine: function() {
 
-    var model = this;
+    var context = this;
+
     // time to each new data point, in ms
     var clockSpeed = 300;
 
@@ -74,10 +79,9 @@ var GameStockView = Backbone.View.extend({
 
     // line generation function
     var line = d3.svg.line()
-        //.interpolate("monotone")
+
         .x(function(d, i) { return x(d.date); })
-        .y(function(d, i) { return y(d.value); })
-        //.interpolate("basis");
+        .y(function(d, i) { return y(d.value); });
 
     // append svg and axes to graph container
     var svg = d3.select(this.el).append("svg")
@@ -111,68 +115,115 @@ var GameStockView = Backbone.View.extend({
         .attr("class", "line")
         .attr("d", line);
 
-    var tick = function(){
-         //update domain
-         if(stockData.length===0){
+    var tick = function() {
+        //update domain
+        if(stockData.length===0){
           console.log("LAST ITEM ", data[data.length - 1]);
-          model.trigger("game_over");
+
+          //this was changed on merge!!!!!!
+          context.trigger("game_over");
           return;
-         }
-          data.push(stockData.shift());
-          var middle = data[data.length - 1].value;
-          
-          
-          path
-          .attr("d",line)
-          .attr("transform", null);
-          
-          y.domain([middle - 500, middle + 500]);
-          x.domain([
-            d3.min(data, function(d) { return d.date; }), 
-            d3.max(data, function(d) { return d.date; })
-          ]);
-         
-          yAxis = d3.svg.axis().scale(y).orient("left");
-          xAxis = d3.svg.axis().scale(x).orient("bottom").ticks(1);
+        }
+        data.push(stockData.shift());
+        var middle = data[data.length - 1].value;
 
-          //switch to new scale
-          svg.select(".y.axis")
-          .transition()
-          .duration(clockSpeed)
-          .ease("linear")
-          .call(yAxis);
+        context.model.setAdjClose(data[data.length - 1].adjClose);
+        
+        path
+        .attr("d",line)
+        .attr("transform", null);
+        
+        y.domain([middle - 500, middle + 500]);
+        x.domain([
+          d3.min(data, function(d) { return d.date; }), 
+          d3.max(data, function(d) { return d.date; })
+        ]);
+       
+        yAxis = d3.svg.axis().scale(y).orient("left");
+        xAxis = d3.svg.axis().scale(x).orient("bottom").ticks(1);
 
-          svg.select(".x.axis")
-          .transition()
-          .duration(clockSpeed)
-          .ease("linear")
-          .call(xAxis);
-            
-            // update the line
-          path
-          .transition()
-          .duration(clockSpeed)
-          .ease("linear")
-          .attr("d", line)
-          .attr("transform", "translate(0,0)")
-          .each('end', function(){
-            // pop the old data point off the front
-            
-            data.shift();
+        //switch to new scale
+        svg.select(".y.axis")
+        .transition()
+        .duration(clockSpeed)
+        .ease("linear")
+        .call(yAxis);
 
-            tick(data);
-            //updateY(data);
-          });   
-           
+        svg.select(".x.axis")
+        .transition()
+        .duration(clockSpeed)
+        .ease("linear")
+        .call(xAxis);
+          
+          // update the line
+        path
+        .transition()
+        .duration(clockSpeed)
+        .ease("linear")
+        .attr("d", line)
+        .attr("transform", "translate(0,0)")
+        .each('end', function(){
+          // pop the old data point off the front
+          
+          data.shift();
+          context.model.trigger('accrual');
+          tick(data);
+          //updateY(data);
+        });    
+
     };
 
-     tick();
+    tick();
 
-   },
+  },
+
+
+  // controller
+
+  events: {
+    'click #buy-button': 'handleBuy',
+    'click #sell-button': 'handleSell'
+  },
+  
+  magnitudeBuySell : 0.2,
+
+  handleBuy: function(event) {
+    event.preventDefault();
+    // console.log('trying to buy');
+
+    var originalShares = this.model.getStartShares();
+    var nShares = this.model.getNShares();
+
+    this.model.setNShares(nShares + (originalShares * this.magnitudeBuySell));
+
+    // console.log(this.model);
+
+    this.model.trigger('buy');
+
+    // this.delegateEvents();
+
+  },
+
+  handleSell: function(event) {
+    event.preventDefault();
+
+    var originalShares = this.model.getStartShares();
+    var nShares = this.model.getNShares();
+
+    this.model.setNShares(nShares - (originalShares * this.magnitudeBuySell));
+
+    this.model.trigger('sell');
+
+    // this.delegateEvents();
+
+  },
 
   render: function() {
-    this.$el.empty(); 
-    //this.drawStockLine();
+    console.log('rendering gameStockView');
+    this.$el.empty();
+    this.$el.append('<button id="buy-button" class="btn btn-default">Buy</button> \
+                    <button id="sell-button" class="btn btn-default">Sell</button>');
+    this.delegateEvents();
     return this.$el;
   }
 

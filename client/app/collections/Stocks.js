@@ -5,8 +5,10 @@ var Stocks = Backbone.Collection.extend({
 
   model: StockModel,
 
+  value : 0,
+
   initialize: function () {
-    this.on('clicked', this.removeStock, this);
+    // this.on('clicked', this.removeStock, this);
   },
 
   // used for checking whether a stock with the given ticker already exists
@@ -116,6 +118,25 @@ var Stocks = Backbone.Collection.extend({
       aggregated.symbol = 'average';
       return aggregated;
     });
+  },
+
+  getValueDiff: function() {
+    // console.log('inside Stocks collection getValueDiff');
+    var currentValue = 0, oldValue = this.value;
+    // console.log('current investment value is: ', oldValue);
+    this.each(function(stock) {
+      // console.log('stock value is: ', stock.getGameValue());
+      currentValue += stock.getGameValue();
+    });
+    // console.log(currentValue);
+    this.value = currentValue;
+    // console.log('value difference is: ', currentValue - oldValue);
+    return oldValue - currentValue;
+  },
+
+  getValue: function() {
+    return this.getValueDiff();
   }
+
 
 });
