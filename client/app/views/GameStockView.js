@@ -6,7 +6,8 @@ var GameStockView = Backbone.View.extend({
   className: 'graph col-xs-4 col-md-4',
 
   template: _.template('<button id="buy-button" class="btn btn-default">Buy</button> \
-                        <button id="sell-button" class="btn btn-default">Sell</button>'),
+                        <button id="sell-button" class="btn btn-default">Sell</button>'
+                        ),
 
   initialize: function() {
     // this.model.on('remove reset', this.render, this);
@@ -84,7 +85,8 @@ var GameStockView = Backbone.View.extend({
         .y(function(d, i) { return y(d.value); });
 
     // append svg and axes to graph container
-    var svg = d3.select(this.el).append("svg")
+
+    var svg = d3.select(this.el).insert("svg",":first-child")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
       .append("g")
@@ -115,6 +117,17 @@ var GameStockView = Backbone.View.extend({
         .attr("class", "line")
         .attr("d", line);
 
+    var price = d3.select(this.el).append("g")
+      .attr('transform', 'translate(' + (width + margin.left + margin.right) * 0.6 + ', 0)')
+      .append('rect')
+        .attr("width", (width + margin.left + margin.right) * 0.4)
+        .attr("height", 30);
+
+    var text =  price.append('text')
+          .attr('x', (width + margin.left + margin.right) * 0.6)
+          .attr('y', 30)
+          .attr('dy', '28px');
+
     var tick = function() {
         //update domain
         if(stockData.length===0){
@@ -126,6 +139,10 @@ var GameStockView = Backbone.View.extend({
         }
         data.push(stockData.shift());
         var middle = data[data.length - 1].value;
+
+        
+        text
+          .text('Value: $' + numeral(context.model.getGameValue()).format("0,0.00"));
 
         context.model.setAdjClose(data[data.length - 1].adjClose);
         
@@ -166,7 +183,7 @@ var GameStockView = Backbone.View.extend({
           // pop the old data point off the front
           
           data.shift();
-          context.model.trigger('accrual');
+          context.model.trigger('accrual', context);
           tick(data);
           //updateY(data);
         });    
@@ -196,8 +213,6 @@ var GameStockView = Backbone.View.extend({
 
     this.model.setNShares(nShares + (originalShares * this.magnitudeBuySell));
 
-    // console.log(this.model);
-
     this.model.trigger('buy');
 
     // this.delegateEvents();
@@ -210,7 +225,13 @@ var GameStockView = Backbone.View.extend({
     var originalShares = this.model.getStartShares();
     var nShares = this.model.getNShares();
 
-    this.model.setNShares(nShares - (originalShares * this.magnitudeBuySell));
+    var numSold = nShares - (originalShares * this.magnitudeBuySell);
+
+    if (shareChange > 0) {
+      this.model.setNShares(numSold);
+    } else {
+      this.model.setNShares(0);
+    }
 
     this.model.trigger('sell');
 
@@ -220,11 +241,12 @@ var GameStockView = Backbone.View.extend({
 
   render: function() {
     console.log('rendering gameStockView');
-    this.$el.empty();
-    this.$el.append('<button id="buy-button" class="btn btn-default">Buy</button> \
-                    <button id="sell-button" class="btn btn-default">Sell</button>');
-    this.delegateEvents();
-    return this.$el;
+    // this.$el.empty();
+    return this.$el.html(this.template(this.model.attribtes));
+    // '<button id="buy-button" class="btn btn-default">Buy</button> \
+    //                 <button id="sell-button" class="btn btn-default">Sell</button>');
+    // this.delegateEvents();
+    // return this.$el;
   }
 
 });

@@ -32,11 +32,12 @@ var DashboardView = Backbone.View.extend({
     }, this);
     
     // show value of investment
-    // this.collection.on('accrual', function() {
-    //   console.log('inside dashboardView accrual listener');
-    //   var investments = this.collection.getValue();
-    //   wallet.set('investment', investments);
-    // }, this);
+    this.collection.on('accrual', function (e) {
+      console.log('inside dashboardView accrual listener');
+      var totalDiff = this.collection.getValueDiff();
+      this.walletView.model.investmentValue(totalDiff);
+      // this.walletView.model.updateInvestment(e.model);
+    }, this);
    
   },
 
