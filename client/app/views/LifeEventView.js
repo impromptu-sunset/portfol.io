@@ -50,7 +50,7 @@ var LifeEventView = Backbone.View.extend({
     
     setTimeout(function(){
       this.$el.hide( "slow");
-    }.bind(this), 2000);
+    }.bind(this), 3000);
 
     return this.$el;  
   }

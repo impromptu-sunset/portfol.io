@@ -13,7 +13,7 @@ var DashboardView = Backbone.View.extend({
     this.walletView = new WalletView({model: this.wallet});
     this.lifeEventsView = new LifeEventsView({collection: this.lifeEvents, wallet: this.wallet});
     this.gameStocksView = new GameStocksView({collection: this.collection});
-    this.resultsView = new ResultsView({collection: new ResultsCollection()});
+    this.resultsView = new ResultsView({collection: new ResultsCollection(), wallet: this.wallet});
 
     this.render();
 
