@@ -80,6 +80,10 @@ var DashboardView = Backbone.View.extend({
       var total = this.collection.getValue();
       this.walletView.model.investmentValue(total);
     }, this);
+
+    this.listenTo(this.resultsView, 'readyToRenderResults', function() {
+      this.$el.append(this.resultsView.render());
+    });
    
   },
 
@@ -140,7 +144,7 @@ var DashboardView = Backbone.View.extend({
     this.gameStocksView.remove();
     this.walletView.remove();
     this.lifeEventsView.remove();
-    this.$el.append(this.resultsView.render());
+    this.$el.append(this.resultsView.getResultItems());
   },
 
   generateStocks: function() {

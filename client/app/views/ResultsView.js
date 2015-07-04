@@ -3,11 +3,13 @@ var ResultsView = Backbone.View.extend({
     // this.render();
     console.log("PARAMS", params.wallet);
 
+    this.wallet = params.wallet;
+    console.log('params wallet', params.wallet);
+
     this.collection.on('add', function() {
-      this.render();
+      // this.render();
     }, this);
     // DEBUG: this function gets the values for the earned and potential cash value
-    this.getPurchaseResult(params.wallet.get('cash'), params.wallet.get('investment'));
   },
 
   render: function(){
@@ -19,6 +21,12 @@ var ResultsView = Backbone.View.extend({
     );
   },
 
+  getResultItems: function() {
+    var earned = parseInt(this.wallet.get('cash')+this.wallet.get('investment'));
+    var potential = earned + 5 * 2.3;
+    this.getPurchaseResult(earned, potential);
+  },
+
   className: 'results-box col-xs-12',
 
   getPurchaseResult: function(earned, potential) {
@@ -26,6 +34,8 @@ var ResultsView = Backbone.View.extend({
     var earnedCash = earned || 17;
     var potentialCash = potential || 33772;
     var resultObj = {};
+
+    console.log('EARNED', earned, 'POTENTIAL', potential);
 
     // make an ajax call with the earned cash
     $.ajax({
@@ -57,6 +67,7 @@ var ResultsView = Backbone.View.extend({
             resultObj.status = "potential";
             // add a new model to the collection with the results
             context.collection.add([resultObj]);
+            context.trigger('readyToRenderResults');
           });
       });
 
