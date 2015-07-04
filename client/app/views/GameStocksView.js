@@ -42,7 +42,7 @@ var GameStocksView = Backbone.View.extend({
 
   setup_timer :function(){
     // random number from 1 second to 10 seconds.
-    var random = Math.floor(Math.random() * 10000) + 1000; 
+    var random = Math.floor(Math.random() * 12000) + 4000; 
     this.timeout = setTimeout(function(){
       this.collection.trigger('life_event');
       // console.log(random);

@@ -5,8 +5,10 @@ var LifeEventView = Backbone.View.extend({
 
   template: _.template('<div class="info-item row well">\
                         <%= event %><br>\
-                        <%=text%>: <%= value %>,\
-                        </div>'),
+                        <i class="glyphicon glyphicon-arrow-<% if \
+                        (text === "YOU WON") { %>up up-icon<% } else \
+                        { %>down down-icon<% } %>"></i>\
+                        <%=text%>: <%= value %></div>'),
 
   initialize: function(params) {
     this.wallet = params.wallet;
@@ -41,8 +43,15 @@ var LifeEventView = Backbone.View.extend({
       "text": text
     }));
 
+    if(value <= 0){
+      value = 0;
+    }
     this.wallet.set('cash', value);
     
+    setTimeout(function(){
+      this.$el.hide( "slow");
+    }.bind(this), 2000);
+
     return this.$el;  
   }
 
