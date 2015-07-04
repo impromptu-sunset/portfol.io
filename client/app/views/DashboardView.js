@@ -144,7 +144,7 @@ var DashboardView = Backbone.View.extend({
     this.gameStocksView.remove();
     this.walletView.remove();
     this.lifeEventsView.remove();
-    this.$el.append(this.resultsView.getResultItems());
+    this.resultsView.getResultItems();
   },
 
   generateStocks: function() {
