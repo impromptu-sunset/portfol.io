@@ -1,12 +1,13 @@
 var ResultsView = Backbone.View.extend({
-  initialize: function() {
+  initialize: function(params) {
     // this.render();
+    console.log("PARAMS", params.wallet);
 
     this.collection.on('add', function() {
       this.render();
     }, this);
     // DEBUG: this function gets the values for the earned and potential cash value
-    this.getPurchaseResult();
+    this.getPurchaseResult(params.wallet.get('cash'), params.wallet.get('investment'));
   },
 
   render: function(){
