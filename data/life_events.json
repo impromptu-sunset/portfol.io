@@ -1,20 +1,21 @@
 [
   {
     "event": "had a baby",
-    "amount": 5000,
-    "probability": 20,
+    "amount": 250000,
+    "probability": 10,
     "by": "neg"
   },
   {
     "event": "You won (scratch-off) lottery",
     "amount": 20,
-    "probability": 40,
+    "probability": 20,
     "by": "pos"
   },
   {
     "event": "You won the lottery!",
-    "amount": 1000000,
-    "probability": 1,
+    "amount": 0,
+    "percent": 50,
+    "probability": 4,
     "by": "pos"
   },
   {
@@ -23,5 +24,29 @@
     "percent": 50,
     "probability": 5,
     "by": "neg"
+  },
+  {
+    "event": "Insurance Lawsuit payout",
+    "amount": 2000,
+    "probability": 15,
+    "by": "neg"
+  },
+  {
+    "event": "Your son just went to Stanford",
+    "amount": 45729,
+    "probability": 15,
+    "by": "neg"
+  },
+  {
+    "event": "You won a dog show competition (Woof Woof)",
+    "amount": 500,
+    "probability": 20,
+    "by": "pos"
+  },
+  {
+    "event": "Congratulations on winning your very first hackathon",
+    "amount": 800,
+    "probability": 20,
+    "by": "pos"
   }
 ]
