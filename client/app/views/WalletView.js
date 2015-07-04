@@ -1,7 +1,7 @@
 // Backbone view for the wallet
 var WalletView = Backbone.View.extend({
 
-  classname:'wallet col-xs-12 col-md-7',
+  className:'wallet',
 
   // el: '#wallet-box',
 
