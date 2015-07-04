@@ -9,6 +9,8 @@ var ResultsView = Backbone.View.extend({
     this.collection.on('add', function() {
       // this.render();
     }, this);
+
+    this.gameHasEnded = false;
     // DEBUG: this function gets the values for the earned and potential cash value
   },
 
@@ -36,6 +38,9 @@ var ResultsView = Backbone.View.extend({
     var potentialCash = potential || 33772;
     var resultObj = {};
 
+    if (this.gameHasEnded === true) {
+      return;
+    }
     console.log('EARNED', earned, 'POTENTIAL', potential);
 
     // make an ajax call with the earned cash
@@ -69,6 +74,7 @@ var ResultsView = Backbone.View.extend({
             // add a new model to the collection with the results
             context.collection.add([resultObj]);
             context.trigger('readyToRenderResults');
+            context.gameHasEnded = true;
           });
       });
 
