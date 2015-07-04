@@ -22,9 +22,9 @@ var GameStockView = Backbone.View.extend({
   getStockData: function() {
 
     // number of samples in the data array
-    var sampleSize = 365;
+    // var sampleSize = 365;
     // DEBUG REDUCED SAMPLING SIZE FOR TESTING:
-    // var sampleSize = 3;
+    var sampleSize = 3;
 
     var rawData = this.model.getTrajectory();
     if (rawData.length <= sampleSize) {
