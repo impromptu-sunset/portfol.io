@@ -13,17 +13,18 @@ var ResultsView = Backbone.View.extend({
   },
 
   render: function(){
+    var context = this;
     // add the earned and potential results to the DOM
     return this.$el.html('<h3>Results</h3>').append(
       this.collection.map(function(result) {
-        return new ResultView({model: result}).render();
+        return new ResultView({model: result, wallet: context.wallet}).render();
       })
     );
   },
 
   getResultItems: function() {
     var earned = parseInt(this.wallet.get('cash')+this.wallet.get('investment'));
-    var potential = earned + 5 * 2.3;
+    var potential = (earned + 5)* 2.3;
     this.getPurchaseResult(earned, potential);
   },
 
