@@ -5,7 +5,7 @@ var AppView = Backbone.View.extend({
 
   navDiv: '<nav class="navbar navbar-inverse navbar-static-top"> \
              <div class="container-fluid"> \
-               <a href="#front" class="navbar-brand">Portfol.io</a> \
+               <a href="javascript:history.go(0)" class="navbar-brand">Portfol.io</a> \
                <ul class="nav nav-pills navbar-nav navbar-right"> \
                  <li><a href="https://github.com/impromptu-sunset/sandworm-hr">GitHub</a></li> \
                </ul> \
