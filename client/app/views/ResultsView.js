@@ -41,7 +41,6 @@ var ResultsView = Backbone.View.extend({
     if (this.gameHasEnded === true) {
       return;
     }
-    console.log('EARNED', earned, 'POTENTIAL', potential);
 
     // make an ajax call with the earned cash
     $.ajax({

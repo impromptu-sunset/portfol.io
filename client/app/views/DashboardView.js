@@ -189,12 +189,9 @@ var DashboardView = Backbone.View.extend({
         // store the results data
         console.log('STOCK DATA IN AJAX IS', data);
         sampleStockA = new StockModel();
-        sampleStockA.parse(data);
-        context.collection.add(sampleStockA);
+        
 
-      });
-
-      $.ajax({
+        $.ajax({
         type: "POST",
         contentType: "application/json",
         url: '/api/stocks',
@@ -203,12 +200,9 @@ var DashboardView = Backbone.View.extend({
         })
         .done(function(data) {
           sampleStockB = new StockModel();
-          sampleStockB.parse(data);
-          context.collection.add(sampleStockB);
+          
 
-        });
-
-        $.ajax({
+           $.ajax({
           type: "POST",
           contentType: "application/json",
           url: '/api/stocks',
@@ -217,10 +211,25 @@ var DashboardView = Backbone.View.extend({
           })
           .done(function(data) {
             sampleStockC = new StockModel();
+
+            sampleStockA.parse(data);
+            context.collection.add(sampleStockA);
+
+            sampleStockB.parse(data);
+            context.collection.add(sampleStockB);
+
             sampleStockC.parse(data);
             context.collection.add(sampleStockC);
 
           });
+
+        });
+
+      });
+
+      
+
+       
 
     // sampleStockA.fetch({data: sampleStockDataA, type: 'POST'}).done(function() {
     //   console.log('adding the new stock to the collection');
