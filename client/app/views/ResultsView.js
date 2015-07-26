@@ -29,7 +29,8 @@ var ResultsView = Backbone.View.extend({
   className: 'results-box col-xs-12',
 
   generateRandomPotentialCash: function(earned) {
-    return Math.floor(Math.random() * (2000000 - (earned+10000)) + (earned+10000))
+    earned = earned || 2;
+    return Math.floor(Math.random() * (2000000 - (earned+5000))) + (earned+5000);
   },
 
   showSpinner: function() {
@@ -44,7 +45,6 @@ var ResultsView = Backbone.View.extend({
     setTimeout(function() {
       var spinnerTarget = document.getElementById('spinner');
       context._spinner = new Spinner().spin(spinnerTarget);
-
       $('#loading-message').html('<h1>Generating your results...</h1>')
       $('#loading-message').show()
     }, 1)
