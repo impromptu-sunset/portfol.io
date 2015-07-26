@@ -34,7 +34,7 @@ var DashboardView = Backbone.View.extend({
     // buy stock, subtract money from wallet
     this.listenTo(this.collection, 'buy', function (stock) {
       // console.log('inside dashboardView buy/sell listener');
-      console.log(stock);
+      // console.log(stock);
 
       // if user is broke, return without buying
       if (this.walletView.model.getCash() === 0) return;
@@ -152,7 +152,7 @@ var DashboardView = Backbone.View.extend({
     var context = this;
 
     sampleStockDataA = {
-      symbol: 'AIG',
+      symbol: 'PCLN',
       from: '2000-01-01', //FORMAT: 'YYYY-MM-DD',
       to: '2015-07-3',     //FORMAT: 'YYYY-MM-DD', Currently unnecessary because we always retrieve to the latest date
       amount: 1,
@@ -168,7 +168,7 @@ var DashboardView = Backbone.View.extend({
     };
 
     sampleStockDataC = {
-      symbol: 'OMX',
+      symbol: 'NSANY',
       from: '2000-01-01', //FORMAT: 'YYYY-MM-DD',
       to: '2015-07-3',     //FORMAT: 'YYYY-MM-DD', Currently unnecessary because we always retrieve to the latest date
       amount: 1,
