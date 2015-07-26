@@ -37,8 +37,8 @@ var AppView = Backbone.View.extend({
   },
 
   setUsername: function(name) {
-    this.model.set('username', name);
-    this.dashboardView.setUsername(name);
+    // this.model.set('username', name);
+    // this.dashboardView.setUsername(name);
   },
 
   renderBody: function(view, renderDashboard) {
@@ -97,16 +97,16 @@ var AppView = Backbone.View.extend({
   // },
 
   portfolios: function () {
-    this.$el.empty();
-    this.portfoliosView = new PortfoliosView({collection: this.collection});
-    var navbar = $(this.navDiv);
-    if (this.model.get('signedin')) {
-      navbar = this.template(this.model.attributes);
-    }
-    this.$el.append([
-      navbar,
-      this.portfoliosView.$el
-    ]);
+  //   this.$el.empty();
+  //   this.portfoliosView = new PortfoliosView({collection: this.collection});
+  //   var navbar = $(this.navDiv);
+  //   if (this.model.get('signedin')) {
+  //     navbar = this.template(this.model.attributes);
+  //   }
+  //   this.$el.append([
+  //     navbar,
+  //     this.portfoliosView.$el
+  //   ]);
   }
 
 });
