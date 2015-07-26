@@ -11,13 +11,14 @@ var ResultsView = Backbone.View.extend({
   },
 
   render: function(){
+    var playAgainButton = '<div class="col-xs-12 text-center"><button class="btn btn-success btn-lg" onClick="history.go(0)">Play Again</button></div>'
     var context = this;
     // add the earned and potential results to the DOM
     return this.$el.html('<h3>Results</h3>').append(
       this.collection.map(function(result) {
         return new ResultView({model: result, wallet: context.wallet}).render();
       })
-    );
+    ).append(playAgainButton);
   },
 
   getResultItems: function() {
