@@ -123,16 +123,26 @@ var DashboardView = Backbone.View.extend({
     this.resultsView.getResultItems();
   },
 
-  showSpinner: function() {
+  showLoadingScreen: function() {
     var context = this;
-    this.$el.prepend('<div id="spinner"></div>')
-
+    this.$el.append('<div id="spinner"></div>')
+    this.$el.append('<div id="loading-message" class="col-xs-12 text-center"></div>');
 
     // must be wrapped in a set timeout function because of the time delay writing to the $el
     setTimeout(function() {
       var spinnerTarget = document.getElementById('spinner');
       context._spinner = new Spinner().spin(spinnerTarget);
+      $('#loading-message').html('<h1>Preparing stock data...</h1>')
+      $('.wallet').hide()
+
     }, 1)
+  },
+
+  hideLoadingScreen: function() {
+    this._spinner.stop()
+    $('#loading-message').hide()
+    $('.wallet').show()
+
   },
 
   generateStocks: function() {
@@ -166,7 +176,7 @@ var DashboardView = Backbone.View.extend({
     };
 
     // shows the loading spinner
-    this.showSpinner()
+    this.showLoadingScreen()
 
     $.ajax({
       type: "POST",
@@ -211,7 +221,7 @@ var DashboardView = Backbone.View.extend({
             sampleStockC.parse(stockDataC);
             context.collection.add(sampleStockC);
             // stops the loading spinner
-            context._spinner.stop()
+            context.hideLoadingScreen()
 
           });
 
