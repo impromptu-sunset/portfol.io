@@ -145,9 +145,32 @@ var DashboardView = Backbone.View.extend({
 
   },
 
+  shuffleArray: function(array) {
+    var currentIndex = array.length, temporaryValue, randomIndex ;
+
+    // While there remain elements to shuffle...
+    while (0 !== currentIndex) {
+
+      // Pick a remaining element...
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex -= 1;
+
+      // And swap it with the current element.
+      temporaryValue = array[currentIndex];
+      array[currentIndex] = array[randomIndex];
+      array[randomIndex] = temporaryValue;
+    }
+
+    return array;
+  },
+
   generateStocks: function() {
     var sampleStockDataA = {};
+    var sampleStockDataB = {};
+    var sampleStockDataC = {};
+    var allSampleStockData = [];
     var sampleStockA;
+    var shuffledAllSampleStockData = [];
     var stock;
     var context = this;
 
@@ -175,6 +198,10 @@ var DashboardView = Backbone.View.extend({
       period: 'd'          // 'd' (daily), 'w' (weekly), 'm' (monthly), 'v' (dividends only) 
     };
 
+    allSampleStockData.push(sampleStockDataA, sampleStockDataB, sampleStockDataC);
+
+    shuffledAllSampleStockData = this.shuffleArray(allSampleStockData)
+
     // shows the loading spinner and hides the wallet
     this.showLoadingElements()
 
@@ -182,7 +209,7 @@ var DashboardView = Backbone.View.extend({
       type: "POST",
       contentType: "application/json",
       url: '/api/stocks',
-      data: JSON.stringify(sampleStockDataA),
+      data: JSON.stringify(shuffledAllSampleStockData[0]),
       dataType: "json"
       })
       .done(function(data) {
@@ -194,7 +221,7 @@ var DashboardView = Backbone.View.extend({
         type: "POST",
         contentType: "application/json",
         url: '/api/stocks',
-        data: JSON.stringify(sampleStockDataB),
+        data: JSON.stringify(shuffledAllSampleStockData[1]),
         dataType: "json"
         })
         .done(function(data) {
@@ -205,7 +232,7 @@ var DashboardView = Backbone.View.extend({
           type: "POST",
           contentType: "application/json",
           url: '/api/stocks',
-          data: JSON.stringify(sampleStockDataC),
+          data: JSON.stringify(shuffledAllSampleStockData[2]),
           dataType: "json"
           })
           .done(function(data) {
