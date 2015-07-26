@@ -7,7 +7,7 @@ var AppView = Backbone.View.extend({
              <div class="container-fluid"> \
                <a href="javascript:history.go(0)" class="navbar-brand">Portfol.io</a> \
                <ul class="nav nav-pills navbar-nav navbar-right"> \
-                 <li><a href="https://github.com/impromptu-sunset/sandworm-hr">GitHub</a></li> \
+                 <li><a href="https://github.com/impromptu-sunset/portfol.io">GitHub</a></li> \
                </ul> \
              </div> \
           </nav> \

@@ -35,12 +35,6 @@ var ResultsView = Backbone.View.extend({
 
   showSpinner: function() {
     var context = this;
-    // this.$el.prepend([
-    //   '<div id="spinner"></div>',
-    //   '<div id="loading-results-message" class="col-xs-12 text-center"><h1>Preparing results...</h1></div>',
-    //   ])
-
-
     // must be wrapped in a set timeout function because of the time delay writing to the $el
     setTimeout(function() {
       var spinnerTarget = document.getElementById('spinner');
