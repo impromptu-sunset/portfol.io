@@ -33,7 +33,7 @@ var ResultsView = Backbone.View.extend({
     return Math.floor(Math.random() * (2000000 - (earned+5000))) + (earned+5000);
   },
 
-  showSpinner: function() {
+  showLoadingElements: function() {
     var context = this;
     // must be wrapped in a set timeout function because of the time delay writing to the $el
     setTimeout(function() {
@@ -44,7 +44,7 @@ var ResultsView = Backbone.View.extend({
     }, 1)
   },
 
-  stopSpinner: function() {
+  hideLoadingElements: function() {
     this._spinner.stop()
     $('#loading-message').hide()
   },
@@ -61,8 +61,10 @@ var ResultsView = Backbone.View.extend({
       // eject to not display extra results
       return;
     }
+    // set that the game has ended to prevent repeated calls to this function
     this.gameHasEnded = true
-    this.showSpinner()
+    // 
+    this.showLoadingElements()
 
     // make an ajax call with the earned cash
     $.ajax({
@@ -94,7 +96,7 @@ var ResultsView = Backbone.View.extend({
             context.collection.add([earnedResultObj, potentialResultObj]);
 
             context.trigger('readyToRenderResults');
-            context.stopSpinner()
+            context.hideLoadingElements()
             context.gameHasEnded = true;
           });
       });

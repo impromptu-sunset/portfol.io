@@ -123,7 +123,7 @@ var DashboardView = Backbone.View.extend({
     this.resultsView.getResultItems();
   },
 
-  showLoadingScreen: function() {
+  showLoadingElements: function() {
     var context = this;
     this.$el.append('<div id="spinner"></div>')
     this.$el.append('<div id="loading-message" class="col-xs-12 text-center"></div>');
@@ -138,7 +138,7 @@ var DashboardView = Backbone.View.extend({
     }, 1)
   },
 
-  hideLoadingScreen: function() {
+  hideLoadingElements: function() {
     this._spinner.stop()
     $('#loading-message').hide()
     $('.wallet').show()
@@ -175,8 +175,8 @@ var DashboardView = Backbone.View.extend({
       period: 'd'          // 'd' (daily), 'w' (weekly), 'm' (monthly), 'v' (dividends only) 
     };
 
-    // shows the loading spinner
-    this.showLoadingScreen()
+    // shows the loading spinner and hides the wallet
+    this.showLoadingElements()
 
     $.ajax({
       type: "POST",
@@ -220,8 +220,8 @@ var DashboardView = Backbone.View.extend({
 
             sampleStockC.parse(stockDataC);
             context.collection.add(sampleStockC);
-            // stops the loading spinner
-            context.hideLoadingScreen()
+            // hides the loading spinner and shows the wallet
+            context.hideLoadingElements()
 
           });
 
