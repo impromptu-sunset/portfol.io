@@ -8,7 +8,7 @@ var LifeEventView = Backbone.View.extend({
                         <i class="glyphicon glyphicon-arrow-<% if \
                         (text === "YOU WON") { %>up up-icon<% } else \
                         { %>down down-icon<% } %>"></i>\
-                        <%=text%>: <%= value %></div>'),
+                        <%=text%>: $<%= value %></div>'),
 
   initialize: function(params) {
     this.wallet = params.wallet;
