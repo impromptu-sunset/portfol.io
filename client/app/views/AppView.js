@@ -71,17 +71,17 @@ var AppView = Backbone.View.extend({
   render: function(){
     var context = this;
     // immediately makes a request to see if user is signed in
-    $.ajax({
-      url:'/auth',
-      success: function (response) {
-        context.model.set('signedin', true);
-        context.setUsername(response);
-        // context.renderBody(context.formView);
-       },
-      error: function() {
-        // context.renderBody(context.formView);
-      }
-    });
+    // $.ajax({
+    //   url:'/auth',
+    //   success: function (response) {
+    //     context.model.set('signedin', true);
+    //     context.setUsername(response);
+    //     // context.renderBody(context.formView);
+    //    },
+    //   error: function() {
+    //     // context.renderBody(context.formView);
+    //   }
+    // });
   },
 
   // signup: function() {

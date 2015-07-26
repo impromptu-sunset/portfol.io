@@ -5,9 +5,6 @@ var DashboardView = Backbone.View.extend({
   className: 'dashboard container-fluid',
 
   initialize: function(params){
-    // this.graphView = new GraphView({collection: this.collection});
-    // this.infoView = new InfoView({collection: this.collection});
-
     this.lifeEvents = params.life_events;
     this.wallet = new WalletModel();
     this.walletView = new WalletView({model: this.wallet});
@@ -18,7 +15,6 @@ var DashboardView = Backbone.View.extend({
     this.render();
 
     this.listenTo(this.collection, 'game_over', function(){
-      // this.renderPotentialValue();
       this.renderResults();
     }, this);
 
@@ -109,7 +105,6 @@ var DashboardView = Backbone.View.extend({
   render: function(){
 
     return this.$el.html([
-      // '<div id="spinner">HELLO I AM THE SPINNER</div>',
       this.gameStocksView.$el,
       this.walletView.$el,
       this.lifeEventsView.$el,
@@ -129,12 +124,14 @@ var DashboardView = Backbone.View.extend({
   },
 
   showSpinner: function() {
+    var context = this;
     this.$el.prepend('<div id="spinner"></div>')
+
 
     // must be wrapped in a set timeout function because of the time delay writing to the $el
     setTimeout(function() {
       var spinnerTarget = document.getElementById('spinner');
-      spinner = new Spinner().spin(spinnerTarget);
+      context._spinner = new Spinner().spin(spinnerTarget);
     }, 1)
   },
 
@@ -168,14 +165,8 @@ var DashboardView = Backbone.View.extend({
       period: 'd'          // 'd' (daily), 'w' (weekly), 'm' (monthly), 'v' (dividends only) 
     };
 
-    // sampleStockA = new StockModel();
-    // sampleStockB = new StockModel();
+    // shows the loading spinner
     this.showSpinner()
-
-    // this.collection.create(sampleStockDataA);
-    // console.log($('#spinner').text())
-    
-
 
     $.ajax({
       type: "POST",
@@ -189,9 +180,6 @@ var DashboardView = Backbone.View.extend({
         var stockDataA = data;
         sampleStockA = new StockModel();
 
-
-        
-
         $.ajax({
         type: "POST",
         contentType: "application/json",
@@ -203,7 +191,6 @@ var DashboardView = Backbone.View.extend({
           var stockDataB = data;
           sampleStockB = new StockModel();
           
-
            $.ajax({
           type: "POST",
           contentType: "application/json",
@@ -218,15 +205,13 @@ var DashboardView = Backbone.View.extend({
             sampleStockA.parse(stockDataA);
             context.collection.add(sampleStockA);
 
-
-
             sampleStockB.parse(stockDataB);
             context.collection.add(sampleStockB);
 
             sampleStockC.parse(stockDataC);
             context.collection.add(sampleStockC);
-
-            spinner.stop()
+            // stops the loading spinner
+            context._spinner.stop()
 
           });
 
@@ -234,21 +219,6 @@ var DashboardView = Backbone.View.extend({
 
       });
 
-      
-
-       
-
-    // sampleStockA.fetch({data: sampleStockDataA, type: 'POST'}).done(function() {
-    //   console.log('adding the new stock to the collection');
-    //   context.collection.create([sampleStockA]);
-    // });
-
-    //  sampleStockB.fetch({data: sampleStockDataA, type: 'POST'}).done(function() {
-    //   console.log('adding the new stock to the collection');
-    //   context.collection.create([sampleStockA]);
-    // });
-
-    // sampleStockA = this.collection.model.fetch({data: sampleStockDataA, type: 'POST'});
   }
 
 });

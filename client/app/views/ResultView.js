@@ -38,7 +38,7 @@ var ResultView = Backbone.View.extend({
 
     this.$el.addClass(resultStatus);
 
-    console.log(this.wallet);
+    // console.log(this.wallet);
 
     return this.$el.html(this.template(this.model.attributes));
   }

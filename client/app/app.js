@@ -25,16 +25,16 @@
   });
 
   router.on('route:portfolios',function(){
-    $.ajax({
-      url: '/auth',
-      success: function() {
-        appView.portfolios();
-      },
-      error: function() {
-        router.navigate('signin', true);
-        appView.signinView.$('.error-message').text('Please sign in first!');
-      }
-    });
+    // $.ajax({
+    //   url: '/auth',
+    //   success: function() {
+    //     appView.portfolios();
+    //   },
+    //   error: function() {
+    //     router.navigate('signin', true);
+    //     appView.signinView.$('.error-message').text('Please sign in first!');
+    //   }
+    // });
   });
 
   router.on('route:about',function(){

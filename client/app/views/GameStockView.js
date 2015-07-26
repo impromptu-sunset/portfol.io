@@ -50,7 +50,7 @@ var GameStockView = Backbone.View.extend({
 
     // array of data for one stock in the collection
     var stockData = this.getStockData();
-    console.log("stock data is: ", stockData);
+    // console.log("stock data is: ", stockData);
 
     // number of data points to show at a time
     var n = 10;
@@ -137,7 +137,7 @@ var GameStockView = Backbone.View.extend({
 
 
         if(stockData.length===0){
-          console.log("LAST ITEM ", data[data.length - 1]);
+          // console.log("LAST ITEM ", data[data.length - 1]);
 
           //this was changed on merge!!!!!!
           context.model.trigger("game_over");
