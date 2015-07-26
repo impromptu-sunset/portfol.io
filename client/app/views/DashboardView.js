@@ -95,16 +95,11 @@ var DashboardView = Backbone.View.extend({
   renderPotentialValue: function(){
     // don't need this anymore.
     var total_potential = this.collection.reduce(function(memo, num){
-      console.log("memo", memo);
-      console.log("num", num);
       return memo + Number(num.get('potential'));
     },0, this);
 
-    console.log("total potential ", total_potential);
 
     var life_events_total = this.lifeEvents.total_life_events;
-
-    console.log("total life ", life_events_total);
 
     var potential = total_potential + life_events_total;
     this.$('#potential').remove();
@@ -180,8 +175,6 @@ var DashboardView = Backbone.View.extend({
     // sampleStockA = new StockModel();
     // sampleStockB = new StockModel();
 
-
-    console.log('about to fetch');
 
     // this.collection.create(sampleStockDataA);
 

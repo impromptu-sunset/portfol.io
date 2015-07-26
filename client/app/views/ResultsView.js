@@ -1,13 +1,9 @@
 var ResultsView = Backbone.View.extend({
   initialize: function(params) {
-    // this.render();
-    console.log("PARAMS", params.wallet);
 
     this.wallet = params.wallet;
-    console.log('params wallet', params.wallet);
 
     this.collection.on('add', function() {
-      // this.render();
     }, this);
 
     this.gameHasEnded = false;
@@ -26,16 +22,20 @@ var ResultsView = Backbone.View.extend({
 
   getResultItems: function() {
     var earned = parseInt(this.wallet.get('cash')+this.wallet.get('investment'));
-    var potential = (earned + 5)* 2.3;
+    var potential = this.generateRandomPotentialCash(earned)
     this.getPurchaseResult(earned, potential);
   },
 
   className: 'results-box col-xs-12',
 
+  generateRandomPotentialCash: function() {
+    return Math.floor(Math.random() * (2000000 - 90000)) + 90000
+  },
+
   getPurchaseResult: function(earned, potential) {
     var context = this;
-    var earnedCash = earned || 17;
-    var potentialCash = potential || 33772;
+    var earnedCash = earned || 2;
+    var potentialCash = potential || 86210;
     var resultObj = {};
 
     if (this.gameHasEnded === true) {
