@@ -28,8 +28,8 @@ var ResultsView = Backbone.View.extend({
 
   className: 'results-box col-xs-12',
 
-  generateRandomPotentialCash: function() {
-    return Math.floor(Math.random() * (2000000 - 90000)) + 90000
+  generateRandomPotentialCash: function(earned) {
+    return Math.floor(Math.random() * (2000000 - (earned+10000)) + (earned+10000))
   },
 
   getPurchaseResult: function(earned, potential) {
@@ -38,7 +38,7 @@ var ResultsView = Backbone.View.extend({
     var potentialCash = potential || 86210;
     var resultObj = {};
 
-    if (this.gameHasEnded === true) {
+    if (this.gameHasEnded) {
       return;
     }
 
@@ -51,6 +51,9 @@ var ResultsView = Backbone.View.extend({
       dataType: "json"
       })
       .done(function(data) {
+        if (context.gameHasEnded) {
+          return;
+        }
         // store the results data
         resultObj.ebay = data._ebay;
         resultObj.randomItem = data._randomItem;
@@ -66,6 +69,9 @@ var ResultsView = Backbone.View.extend({
           dataType: "json"
           })
           .done(function(data) {
+            if (context.gasHasEnded) {
+              return;
+            }
             // store the results data
             resultObj.ebay = data._ebay;
             resultObj.randomItem = data._randomItem;

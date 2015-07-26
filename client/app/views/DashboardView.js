@@ -19,7 +19,6 @@ var DashboardView = Backbone.View.extend({
 
     this.listenTo(this.collection, 'game_over', function(){
       // this.renderPotentialValue();
-      console.log('GAME HAS ENDED');
       this.renderResults();
     }, this);
 
@@ -110,25 +109,12 @@ var DashboardView = Backbone.View.extend({
   render: function(){
 
     return this.$el.html([
+      // '<div id="spinner">HELLO I AM THE SPINNER</div>',
       this.gameStocksView.$el,
-      // this.graphView.$el,
-      // this.infoView.$el,
-      // add the wallet box div to the DOM on page load
-      //
-      // this is necessary because whenever there is a change, the entire page
-      // re-renders. We want the cash value to re-render everytime the cash value
-      // increases or decreases, so it is necessary to create a DOM element
-      // for the wallet view to reference when it is re-rendering its value.
-      // '<div id="wallet-box">Wallet Box!</div>',
-      // after we create the wallet-box div, then we can render the wallet view
-      // which references the $el value and manages its own updating
       this.walletView.$el,
       this.lifeEventsView.$el,
-      // this.resultsView.$el
     ]);
-    // this.delegateEvents();
-    // this.bindListeners();
-    // return html;
+
   },
 
   renderWallet: function() {
@@ -140,6 +126,16 @@ var DashboardView = Backbone.View.extend({
     this.walletView.remove();
     this.lifeEventsView.remove();
     this.resultsView.getResultItems();
+  },
+
+  showSpinner: function() {
+    this.$el.prepend('<div id="spinner"></div>')
+
+    // must be wrapped in a set timeout function because of the time delay writing to the $el
+    setTimeout(function() {
+      var spinnerTarget = document.getElementById('spinner');
+      spinner = new Spinner().spin(spinnerTarget);
+    }, 1)
   },
 
   generateStocks: function() {
@@ -174,9 +170,12 @@ var DashboardView = Backbone.View.extend({
 
     // sampleStockA = new StockModel();
     // sampleStockB = new StockModel();
-
+    this.showSpinner()
 
     // this.collection.create(sampleStockDataA);
+    // console.log($('#spinner').text())
+    
+
 
     $.ajax({
       type: "POST",
@@ -187,8 +186,10 @@ var DashboardView = Backbone.View.extend({
       })
       .done(function(data) {
         // store the results data
-        console.log('STOCK DATA IN AJAX IS', data);
+        var stockDataA = data;
         sampleStockA = new StockModel();
+
+
         
 
         $.ajax({
@@ -199,6 +200,7 @@ var DashboardView = Backbone.View.extend({
         dataType: "json"
         })
         .done(function(data) {
+          var stockDataB = data;
           sampleStockB = new StockModel();
           
 
@@ -210,16 +212,21 @@ var DashboardView = Backbone.View.extend({
           dataType: "json"
           })
           .done(function(data) {
+            var stockDataC = data;
             sampleStockC = new StockModel();
 
-            sampleStockA.parse(data);
+            sampleStockA.parse(stockDataA);
             context.collection.add(sampleStockA);
 
-            sampleStockB.parse(data);
+
+
+            sampleStockB.parse(stockDataB);
             context.collection.add(sampleStockB);
 
-            sampleStockC.parse(data);
+            sampleStockC.parse(stockDataC);
             context.collection.add(sampleStockC);
+
+            spinner.stop()
 
           });
 

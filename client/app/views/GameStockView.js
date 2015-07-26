@@ -246,7 +246,6 @@ var GameStockView = Backbone.View.extend({
   },
 
   render: function() {
-    console.log('rendering gameStockView');
     // this.$el.empty();
     return this.$el.html(this.template(this.model.attribtes));
     // '<button id="buy-button" class="btn btn-default">Buy</button> \
