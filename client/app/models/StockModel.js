@@ -4,13 +4,13 @@ var StockModel = Backbone.Model.extend({
   url: '/api/stocks',
 
   initialize: function(){
-    console.log("in initialize of stock model");
-    console.log(this.attributes);
+    // console.log("in initialize of stock model");
+    // console.log(this.attributes);
   },
 
   parse: function(response) {
     if (response.length !== 0) {
-      console.log('INSIDE STOCK PARSE FUNCTION');
+      // console.log('INSIDE STOCK PARSE FUNCTION');
       this.set('history', response); // "history" is just an array of dates, stock prices, etc
       // this.set('amount', parseFloat(this.get('amount')));
       this.set('amount', 1000);

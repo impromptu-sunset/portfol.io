@@ -7,7 +7,7 @@ var WalletModel = Backbone.Model.extend({
   },
 
   initialize: function() {
-    console.log('wallet created');
+    // console.log('wallet created');
     setInterval(this.accrual.bind(this), 300);
   },
 

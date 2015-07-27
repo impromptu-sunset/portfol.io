@@ -5,9 +5,6 @@ var DashboardView = Backbone.View.extend({
   className: 'dashboard container-fluid',
 
   initialize: function(params){
-    // this.graphView = new GraphView({collection: this.collection});
-    // this.infoView = new InfoView({collection: this.collection});
-
     this.lifeEvents = params.life_events;
     this.wallet = new WalletModel();
     this.walletView = new WalletView({model: this.wallet});
@@ -18,8 +15,6 @@ var DashboardView = Backbone.View.extend({
     this.render();
 
     this.listenTo(this.collection, 'game_over', function(){
-      // this.renderPotentialValue();
-      console.log('GAME HAS ENDED');
       this.renderResults();
     }, this);
 
@@ -39,7 +34,7 @@ var DashboardView = Backbone.View.extend({
     // buy stock, subtract money from wallet
     this.listenTo(this.collection, 'buy', function (stock) {
       // console.log('inside dashboardView buy/sell listener');
-      console.log(stock);
+      // console.log(stock);
 
       // if user is broke, return without buying
       if (this.walletView.model.getCash() === 0) return;
@@ -95,16 +90,11 @@ var DashboardView = Backbone.View.extend({
   renderPotentialValue: function(){
     // don't need this anymore.
     var total_potential = this.collection.reduce(function(memo, num){
-      console.log("memo", memo);
-      console.log("num", num);
       return memo + Number(num.get('potential'));
     },0, this);
 
-    console.log("total potential ", total_potential);
 
     var life_events_total = this.lifeEvents.total_life_events;
-
-    console.log("total life ", life_events_total);
 
     var potential = total_potential + life_events_total;
     this.$('#potential').remove();
@@ -116,24 +106,10 @@ var DashboardView = Backbone.View.extend({
 
     return this.$el.html([
       this.gameStocksView.$el,
-      // this.graphView.$el,
-      // this.infoView.$el,
-      // add the wallet box div to the DOM on page load
-      //
-      // this is necessary because whenever there is a change, the entire page
-      // re-renders. We want the cash value to re-render everytime the cash value
-      // increases or decreases, so it is necessary to create a DOM element
-      // for the wallet view to reference when it is re-rendering its value.
-      // '<div id="wallet-box">Wallet Box!</div>',
-      // after we create the wallet-box div, then we can render the wallet view
-      // which references the $el value and manages its own updating
       this.walletView.$el,
       this.lifeEventsView.$el,
-      // this.resultsView.$el
     ]);
-    // this.delegateEvents();
-    // this.bindListeners();
-    // return html;
+
   },
 
   renderWallet: function() {
@@ -147,14 +123,59 @@ var DashboardView = Backbone.View.extend({
     this.resultsView.getResultItems();
   },
 
+  showLoadingElements: function() {
+    var context = this;
+    this.$el.append('<div id="spinner"></div>')
+    this.$el.append('<div id="loading-message" class="col-xs-12 text-center"></div>');
+
+    // must be wrapped in a set timeout function because of the time delay writing to the $el
+    setTimeout(function() {
+      var spinnerTarget = document.getElementById('spinner');
+      context._spinner = new Spinner().spin(spinnerTarget);
+      $('#loading-message').html('<h1>Preparing stock data...</h1>')
+      $('.wallet').hide()
+
+    }, 1)
+  },
+
+  hideLoadingElements: function() {
+    this._spinner.stop()
+    $('#loading-message').hide()
+    $('.wallet').show()
+
+  },
+
+  shuffleArray: function(array) {
+    var currentIndex = array.length, temporaryValue, randomIndex ;
+
+    // While there remain elements to shuffle...
+    while (0 !== currentIndex) {
+
+      // Pick a remaining element...
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex -= 1;
+
+      // And swap it with the current element.
+      temporaryValue = array[currentIndex];
+      array[currentIndex] = array[randomIndex];
+      array[randomIndex] = temporaryValue;
+    }
+
+    return array;
+  },
+
   generateStocks: function() {
     var sampleStockDataA = {};
+    var sampleStockDataB = {};
+    var sampleStockDataC = {};
+    var allSampleStockData = [];
     var sampleStockA;
+    var shuffledAllSampleStockData = [];
     var stock;
     var context = this;
 
     sampleStockDataA = {
-      symbol: 'AIG',
+      symbol: 'PCLN',
       from: '2000-01-01', //FORMAT: 'YYYY-MM-DD',
       to: '2015-07-3',     //FORMAT: 'YYYY-MM-DD', Currently unnecessary because we always retrieve to the latest date
       amount: 1,
@@ -170,76 +191,71 @@ var DashboardView = Backbone.View.extend({
     };
 
     sampleStockDataC = {
-      symbol: 'OMX',
+      symbol: 'NSANY',
       from: '2000-01-01', //FORMAT: 'YYYY-MM-DD',
       to: '2015-07-3',     //FORMAT: 'YYYY-MM-DD', Currently unnecessary because we always retrieve to the latest date
       amount: 1,
       period: 'd'          // 'd' (daily), 'w' (weekly), 'm' (monthly), 'v' (dividends only) 
     };
 
-    // sampleStockA = new StockModel();
-    // sampleStockB = new StockModel();
+    allSampleStockData.push(sampleStockDataA, sampleStockDataB, sampleStockDataC);
 
+    shuffledAllSampleStockData = this.shuffleArray(allSampleStockData)
 
-    console.log('about to fetch');
-
-    // this.collection.create(sampleStockDataA);
+    // shows the loading spinner and hides the wallet
+    this.showLoadingElements()
 
     $.ajax({
       type: "POST",
       contentType: "application/json",
       url: '/api/stocks',
-      data: JSON.stringify(sampleStockDataA),
+      data: JSON.stringify(shuffledAllSampleStockData[0]),
       dataType: "json"
       })
       .done(function(data) {
         // store the results data
-        console.log('STOCK DATA IN AJAX IS', data);
+        var stockDataA = data;
         sampleStockA = new StockModel();
-        sampleStockA.parse(data);
-        context.collection.add(sampleStockA);
 
-      });
-
-      $.ajax({
+        $.ajax({
         type: "POST",
         contentType: "application/json",
         url: '/api/stocks',
-        data: JSON.stringify(sampleStockDataB),
+        data: JSON.stringify(shuffledAllSampleStockData[1]),
         dataType: "json"
         })
         .done(function(data) {
+          var stockDataB = data;
           sampleStockB = new StockModel();
-          sampleStockB.parse(data);
-          context.collection.add(sampleStockB);
-
-        });
-
-        $.ajax({
+          
+           $.ajax({
           type: "POST",
           contentType: "application/json",
           url: '/api/stocks',
-          data: JSON.stringify(sampleStockDataC),
+          data: JSON.stringify(shuffledAllSampleStockData[2]),
           dataType: "json"
           })
           .done(function(data) {
+            var stockDataC = data;
             sampleStockC = new StockModel();
-            sampleStockC.parse(data);
+
+            sampleStockA.parse(stockDataA);
+            context.collection.add(sampleStockA);
+
+            sampleStockB.parse(stockDataB);
+            context.collection.add(sampleStockB);
+
+            sampleStockC.parse(stockDataC);
             context.collection.add(sampleStockC);
+            // hides the loading spinner and shows the wallet
+            context.hideLoadingElements()
 
           });
 
-    // sampleStockA.fetch({data: sampleStockDataA, type: 'POST'}).done(function() {
-    //   console.log('adding the new stock to the collection');
-    //   context.collection.create([sampleStockA]);
-    // });
+        });
 
-    //  sampleStockB.fetch({data: sampleStockDataA, type: 'POST'}).done(function() {
-    //   console.log('adding the new stock to the collection');
-    //   context.collection.create([sampleStockA]);
-    // });
+      });
 
-    // sampleStockA = this.collection.model.fetch({data: sampleStockDataA, type: 'POST'});
   }
 
 });

@@ -21,11 +21,6 @@ var categories = {
     max: 800000,
     id: 26429
   },
-  wristwatch: {
-    min: 0,
-    max: 300000,
-    id: 14324
-  },
   car: {
     min: 1000,
     max: 800000,

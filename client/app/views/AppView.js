@@ -5,9 +5,9 @@ var AppView = Backbone.View.extend({
 
   navDiv: '<nav class="navbar navbar-inverse navbar-static-top"> \
              <div class="container-fluid"> \
-               <a href="#front" class="navbar-brand">Portfol.io</a> \
+               <a href="javascript:history.go(0)" class="navbar-brand">Portfol.io</a> \
                <ul class="nav nav-pills navbar-nav navbar-right"> \
-                 <li><a href="https://github.com/impromptu-sunset/sandworm-hr">GitHub</a></li> \
+                 <li><a href="https://github.com/impromptu-sunset/portfol.io">GitHub</a></li> \
                </ul> \
              </div> \
           </nav> \
@@ -37,8 +37,8 @@ var AppView = Backbone.View.extend({
   },
 
   setUsername: function(name) {
-    this.model.set('username', name);
-    this.dashboardView.setUsername(name);
+    // this.model.set('username', name);
+    // this.dashboardView.setUsername(name);
   },
 
   renderBody: function(view, renderDashboard) {
@@ -71,17 +71,17 @@ var AppView = Backbone.View.extend({
   render: function(){
     var context = this;
     // immediately makes a request to see if user is signed in
-    $.ajax({
-      url:'/auth',
-      success: function (response) {
-        context.model.set('signedin', true);
-        context.setUsername(response);
-        // context.renderBody(context.formView);
-       },
-      error: function() {
-        // context.renderBody(context.formView);
-      }
-    });
+    // $.ajax({
+    //   url:'/auth',
+    //   success: function (response) {
+    //     context.model.set('signedin', true);
+    //     context.setUsername(response);
+    //     // context.renderBody(context.formView);
+    //    },
+    //   error: function() {
+    //     // context.renderBody(context.formView);
+    //   }
+    // });
   },
 
   // signup: function() {
@@ -97,16 +97,16 @@ var AppView = Backbone.View.extend({
   // },
 
   portfolios: function () {
-    this.$el.empty();
-    this.portfoliosView = new PortfoliosView({collection: this.collection});
-    var navbar = $(this.navDiv);
-    if (this.model.get('signedin')) {
-      navbar = this.template(this.model.attributes);
-    }
-    this.$el.append([
-      navbar,
-      this.portfoliosView.$el
-    ]);
+  //   this.$el.empty();
+  //   this.portfoliosView = new PortfoliosView({collection: this.collection});
+  //   var navbar = $(this.navDiv);
+  //   if (this.model.get('signedin')) {
+  //     navbar = this.template(this.model.attributes);
+  //   }
+  //   this.$el.append([
+  //     navbar,
+  //     this.portfoliosView.$el
+  //   ]);
   }
 
 });

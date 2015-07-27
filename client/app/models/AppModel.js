@@ -10,7 +10,7 @@ var AppModel = Backbone.Model.extend({
   setupLifeEvents: function(){
     var life_events = new LifeEvents();
     life_events.fetch();
-    console.log(life_events);
+    // console.log(life_events);
     this.set('life_events', life_events);
   }
 

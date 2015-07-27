@@ -7,7 +7,7 @@ var LifeEvents = Backbone.Collection.extend({
   
   initialize: function(){
     this.on('updateTotal', function(change){
-      console.log("CHANGE IS ", change);
+      // console.log("CHANGE IS ", change);
       if(change){
         this.total_life_events += Number(change);
       }

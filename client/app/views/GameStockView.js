@@ -22,9 +22,11 @@ var GameStockView = Backbone.View.extend({
   getStockData: function() {
 
     // number of samples in the data array
-    var sampleSize = 120;
+    var sampleSize = 110;
     // DEBUG REDUCED SAMPLING SIZE FOR TESTING:
+    // uncomment this to make the game very short
     // var sampleSize = 3;
+    // var sampleSize = 20;
 
     var rawData = this.model.getTrajectory();
     if (rawData.length <= sampleSize) {
@@ -49,7 +51,7 @@ var GameStockView = Backbone.View.extend({
 
     // array of data for one stock in the collection
     var stockData = this.getStockData();
-    console.log("stock data is: ", stockData);
+    // console.log("stock data is: ", stockData);
 
     // number of data points to show at a time
     var n = 10;
@@ -136,7 +138,7 @@ var GameStockView = Backbone.View.extend({
 
 
         if(stockData.length===0){
-          console.log("LAST ITEM ", data[data.length - 1]);
+          // console.log("LAST ITEM ", data[data.length - 1]);
 
           //this was changed on merge!!!!!!
           context.model.trigger("game_over");
@@ -245,7 +247,6 @@ var GameStockView = Backbone.View.extend({
   },
 
   render: function() {
-    console.log('rendering gameStockView');
     // this.$el.empty();
     return this.$el.html(this.template(this.model.attribtes));
     // '<button id="buy-button" class="btn btn-default">Buy</button> \

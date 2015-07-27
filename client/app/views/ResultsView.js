@@ -1,13 +1,9 @@
 var ResultsView = Backbone.View.extend({
   initialize: function(params) {
-    // this.render();
-    console.log("PARAMS", params.wallet);
 
     this.wallet = params.wallet;
-    console.log('params wallet', params.wallet);
 
     this.collection.on('add', function() {
-      // this.render();
     }, this);
 
     this.gameHasEnded = false;
@@ -15,33 +11,61 @@ var ResultsView = Backbone.View.extend({
   },
 
   render: function(){
+    var playAgainButton = '<div class="col-xs-12 text-center"><button class="btn btn-success btn-lg" onClick="history.go(0)">Play Again</button></div>'
     var context = this;
     // add the earned and potential results to the DOM
     return this.$el.html('<h3>Results</h3>').append(
       this.collection.map(function(result) {
         return new ResultView({model: result, wallet: context.wallet}).render();
       })
-    );
+    ).append(playAgainButton);
   },
 
   getResultItems: function() {
     var earned = parseInt(this.wallet.get('cash')+this.wallet.get('investment'));
-    var potential = (earned + 5)* 2.3;
+    var potential = this.generateRandomPotentialCash(earned)
     this.getPurchaseResult(earned, potential);
   },
 
   className: 'results-box col-xs-12',
 
+  generateRandomPotentialCash: function(earned) {
+    earned = earned || 2;
+    return Math.floor(Math.random() * (2000000 - (earned+5000))) + (earned+5000);
+  },
+
+  showLoadingElements: function() {
+    var context = this;
+    // must be wrapped in a set timeout function because of the time delay writing to the $el
+    setTimeout(function() {
+      var spinnerTarget = document.getElementById('spinner');
+      context._spinner = new Spinner().spin(spinnerTarget);
+      $('#loading-message').html('<h1>Generating your results...</h1>')
+      $('#loading-message').show()
+    }, 1)
+  },
+
+  hideLoadingElements: function() {
+    this._spinner.stop()
+    $('#loading-message').hide()
+  },
+
   getPurchaseResult: function(earned, potential) {
     var context = this;
-    var earnedCash = earned || 17;
-    var potentialCash = potential || 33772;
-    var resultObj = {};
+    var earnedCash = earned || 2;
+    var potentialCash = potential || 86210;
+    var earnedResultObj = {};
+    var potentialResultObj = {};
 
-    if (this.gameHasEnded === true) {
+    // if the game has already ended, and this function was called again
+    if (this.gameHasEnded) {
+      // eject to not display extra results
       return;
     }
-    console.log('EARNED', earned, 'POTENTIAL', potential);
+    // set that the game has ended to prevent repeated calls to this function
+    this.gameHasEnded = true
+    // 
+    this.showLoadingElements()
 
     // make an ajax call with the earned cash
     $.ajax({
@@ -53,11 +77,9 @@ var ResultsView = Backbone.View.extend({
       })
       .done(function(data) {
         // store the results data
-        resultObj.ebay = data._ebay;
-        resultObj.randomItem = data._randomItem;
-        resultObj.status = "earned";
-        // add a new model to the collection with the results
-        context.collection.add([resultObj]);
+        earnedResultObj.ebay = data._ebay;
+        earnedResultObj.randomItem = data._randomItem;
+        earnedResultObj.status = "earned";
         // make an ajax call with the potential cash
         $.ajax({
           type: "POST",
@@ -68,12 +90,14 @@ var ResultsView = Backbone.View.extend({
           })
           .done(function(data) {
             // store the results data
-            resultObj.ebay = data._ebay;
-            resultObj.randomItem = data._randomItem;
-            resultObj.status = "potential";
+            potentialResultObj.ebay = data._ebay;
+            potentialResultObj.randomItem = data._randomItem;
+            potentialResultObj.status = "potential";
             // add a new model to the collection with the results
-            context.collection.add([resultObj]);
+            context.collection.add([earnedResultObj, potentialResultObj]);
+
             context.trigger('readyToRenderResults');
+            context.hideLoadingElements()
             context.gameHasEnded = true;
           });
       });
