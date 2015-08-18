@@ -6,17 +6,10 @@
 
 ## Table of Contents
 
-1. [Usage](#Usage)
-1. [Requirements](#requirements)
 1. [Team](#team)
+1. [Requirements](#requirements)
 1. [Installing Dependencies](#installing-dependencies)
 1. [Contributing](#contributing)
-
-
-## Requirements
-
-- Node
-- Backbone.js
 
 ## Team
 
@@ -24,7 +17,12 @@
   - __Scrum Master__: Bahia ElSharkawy
   - __Development Team Members__: Peter Espe
 
-### Installing Dependencies
+## Requirements
+
+- Node
+- Backbone.js
+
+## Installing Dependencies
 
 From within the root directory:
 
