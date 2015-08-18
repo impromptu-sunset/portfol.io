@@ -12,14 +12,12 @@
 1. [Installing Dependencies](#installing-dependencies)
 1. [Contributing](#contributing)
 
-## Usage
-
-> Some usage instructions
 
 ## Requirements
 
 - Node
-- 
+- Backbone.js
+
 ## Team
 
   - __Product Owner__: Jonathan Davis
